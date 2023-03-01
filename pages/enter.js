@@ -105,11 +105,13 @@ function SignInButton() {
         debounce(async (username) => {
             if (username.length>=3) {
                 // const ref = firestore.doc('usernames/${usernames}'); // v8
-                const ref = doc(db,'usernames/${usernames}');
+                const ref = doc(db,"usernames",username);
+
                 // const { exists } = await ref.get(); // v8
-                const { exists } = await getDoc(ref)
+                // const { exists } = await getDoc(ref);
+                const docSnap = await getDoc(ref);
+                const exists = docSnap.exists();
                 console.log('Firestone read executed!');
-                console.log(`Does it exist in the database ${exists}`)
                 // if doc does not exist we know that is a valid username
                 setIsValid(!exists);
                 setLoading(false);
