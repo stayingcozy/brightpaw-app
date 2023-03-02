@@ -3,7 +3,7 @@ import { ref as vidRef, uploadBytesResumable, getDownloadURL } from 'firebase/st
 
 import { auth, storage } from '@/lib/firebase';
 import Loader from './Loader';
-import VideoPlayer from './VideoPlayer';
+// import VideoPlayer from './VideoPlayer';
 
 // Uploads images to Firebase Storage
 export default function VideoUploader() {
@@ -36,12 +36,12 @@ export default function VideoUploader() {
     // const task = ref.put(file); // v8
     const uploadTask  = uploadBytesResumable(storageRef,file,metadata);
 
-    // // Listen to updates to upload task
-    // task.on(STATE_CHANGED, (snapshot) => {
-    //   console.log(snapshot);
-    //   const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
-    //   console.log({pct})
-    //   setProgress(pct);
+    // Listen to updates to upload task
+    uploadTask.on('state_changed', (snapshot) => {
+      console.log(snapshot);
+      const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+      console.log({pct})
+      setProgress(pct);
 
       // Get downloadURL AFTER task resolves - by using then (Note: this is not a native Promise) 
       // uploadTask
@@ -56,6 +56,7 @@ export default function VideoUploader() {
         setDownloadURL(url);
         setUploading(false);
       });
+    });
     };
 
     // // Listen for state changes, errors, and completion of the upload.
