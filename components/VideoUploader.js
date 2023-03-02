@@ -3,18 +3,15 @@ import { ref as vidRef, uploadBytesResumable, getDownloadURL } from 'firebase/st
 
 import { auth, storage } from '@/lib/firebase';
 import Loader from './Loader';
-// import VideoPlayer from './VideoPlayer';
 
 // Uploads images to Firebase Storage
-export default function VideoUploader() {
+export default function VideoUploader({ downloadURL, setDownloadURL }) {
+
   const [uploading, setUploading] = useState(false); // true if file is being uploaded to the cloud
   const [progress, setProgress] = useState(0); // progress of the upload %
-  const [downloadURL, setDownloadURL] = useState(null); // download link avail when complete
 
   // Creates a Firebase Upload Task
   const uploadFile = async (e) => {
-
-    console.log("uploadFile called.")
 
     // Get the file
     const file = Array.from(e.target.files)[0];
@@ -26,30 +23,18 @@ export default function VideoUploader() {
     };
 
     // Makes reference to the storage bucket location
-    // const ref = storage.ref(`uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`); // v8
     const storageRef = vidRef(storage,`uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
     setUploading(true); 
-
-    console.log("reference made.")
     
     // Starts the upload
-    // const task = ref.put(file); // v8
     const uploadTask  = uploadBytesResumable(storageRef,file,metadata);
 
     // Listen to updates to upload task
     uploadTask.on('state_changed', (snapshot) => {
-      console.log(snapshot);
       const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
-      console.log({pct})
       setProgress(pct);
 
       // Get downloadURL AFTER task resolves - by using then (Note: this is not a native Promise) 
-      // uploadTask
-      //   .then((d) => storageRef.getDownloadURL())
-      //   .then((url) => {
-      //     setDownloadURL(url);
-      //     setUploading(false);
-      //   });
       uploadTask
       .then((d) => getDownloadURL(storageRef))
       .then((url) => {
@@ -117,7 +102,6 @@ export default function VideoUploader() {
             </label>
         </>
     )}
-    {/* {downloadURL && <code className="upload-snippet">{`${downloadURL}`}</code>} */}
     </div>
   );
 }
