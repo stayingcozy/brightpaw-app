@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ref as vidRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { toast } from 'react-hot-toast';
 
 import { auth, storage } from '@/lib/firebase';
 import Loader from './Loader';
@@ -82,6 +83,7 @@ export default function VideoUploader({ downloadURL, setDownloadURL }) {
         console.log('File available at', URL);
         setDownloadURL(URL);
         setUploading(false);
+        toast.success('Uploaded Video')
       });
     }
     );
