@@ -3,6 +3,7 @@ import { useState } from 'react';
 import VideoUploader from "@/components/VideoUploader";
 import VideoPlayer from "@/components/VideoPlayer";
 import AuthCheck from '@/components/AuthCheck';
+import NotesSection from '@/components/NotesSection'
 
 export default function UserProfilePage(props) {
 
@@ -14,6 +15,7 @@ export default function UserProfilePage(props) {
         <AuthCheck>
           <VideoUploader downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
           <VideoPlayer  downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
+          {/* <NotesSection /> */}
         </AuthCheck>
     </main>
   )
