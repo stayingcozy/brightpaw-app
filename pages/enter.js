@@ -161,27 +161,3 @@ function UsernameMessage({ username, isValid, loading }) {
     return <p></p>;
   }
 }
-
-function CreateNewPost() {
-  const {user, username} = useContext(UserContext);
-
-  // Create a new post in firestore
-  const createPost = async (e) => {
-      e.preventDefault();
-      const uid = user.uid;
-      //   const ref = firestore.collection('users').doc(uid).collection('posts').doc(slug);
-      const ref = vidRef(db,`users/${uid}/'posts'/${Date.now()}`); // add in doc,collection info
-
-      // Tip: give all fields a default value here
-      const data = {
-      uid,
-      username,
-      published: false, //?
-      content: '# Write your thoughts on the product here',
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      };
-
-      await ref.set(data); // send it to firebase
-  };
-}
