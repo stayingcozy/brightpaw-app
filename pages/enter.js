@@ -3,8 +3,9 @@ import { signInWithPopup } from 'firebase/auth';
 import { doc, writeBatch, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 
+import Loader from '@/components/Loader';
 import { UserContext } from '@/lib/context';
-import SignOutButton from '@/components/SignOutButton';
+// import SignOutButton from '@/components/SignOutButton';
 import { useEffect, useState, useCallback, useContext } from 'react';
 import debounce from 'lodash.debounce';
 
@@ -17,7 +18,7 @@ export default function Enter(props) {
   return (
     <main>
       {user ? 
-        !username ? <UsernameForm /> : <SignOutButton />
+        !username ? <UsernameForm /> : <Loader />
         : 
         <SignInButton username = {username} />
       }
@@ -27,11 +28,11 @@ export default function Enter(props) {
 
 // Sign in with Google button
 function SignInButton({ username }) {
-  const router = useRouter();
+  // const router = useRouter();
 
   const signInWithGoogle = async () => {
     await signInWithPopup(auth, googleAuthProvider);
-    router.push(`/${username}`);
+    // router.push(`/${username}`);
   };
 
   return (
@@ -46,7 +47,7 @@ function UsernameForm() {
   const [formValue, setFormValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const {user, username} = useContext(UserContext);
 
@@ -66,7 +67,7 @@ function UsernameForm() {
       batch.set(usernameDoc, { uid: user.uid });
 
       await batch.commit();
-      router.push(`/${username}`);
+      // router.push(`/${username}`);
   }
 
   const onChange = (e) => {
