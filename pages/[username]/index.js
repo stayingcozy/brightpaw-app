@@ -32,8 +32,8 @@ export default function UserProfilePage(props) {
           <VideoPlayer  downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
-          <SignOutButton />
         </AuthCheck>
+        <SignOutButton />
     </main>
   )
 }

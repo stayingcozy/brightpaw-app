@@ -7,10 +7,11 @@ export default function SignOutButton() {
     const router = useRouter();
 
     function signoutEnter() {
-        // signout
-        signOut(auth);
         // route back to sign in page
         router.push('/enter');
+
+        // signout
+        signOut(auth);
     }
 
     return(

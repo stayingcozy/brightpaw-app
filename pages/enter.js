@@ -1,6 +1,7 @@
 import { auth, db, googleAuthProvider } from '@/lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { doc, writeBatch, getDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 
 import { UserContext } from '@/lib/context';
 import SignOutButton from '@/components/SignOutButton';
@@ -9,6 +10,7 @@ import debounce from 'lodash.debounce';
 
 export default function Enter(props) {
   const {user, username} = useContext(UserContext);
+  const router = useRouter();
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -16,7 +18,7 @@ export default function Enter(props) {
   return (
     <main>
       {user ? 
-        !username ? <UsernameForm /> : <SignOutButton /> 
+        !username ? <UsernameForm /> : <SignOutButton />
         : 
         <SignInButton />
       }
@@ -36,7 +38,11 @@ function SignInButton() {
       </button>
     );
 }
-  
+
+// function RouteProfile( username ) {
+//   const router = useRouter();
+//   return  router.push(`/${username}`);
+// }
 // // Sign out button
 // function SignOutButton() {
 //   // return <button onClick={() => auth.signOut()}>Sign Out</button>; // v8
