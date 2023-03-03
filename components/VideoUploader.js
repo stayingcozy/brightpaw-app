@@ -24,7 +24,7 @@ export default function VideoUploader({ downloadURL, setDownloadURL }) {
     };
 
     // Makes reference to the storage bucket location
-    const storageRef = vidRef(storage,`uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
+    const storageRef = vidRef(storage,`uploads/${auth.currentUser.uid}/videos/${Date.now()}.${extension}`);
     setUploading(true); 
     
     // Starts the upload
