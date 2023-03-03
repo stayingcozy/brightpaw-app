@@ -10,7 +10,6 @@ import debounce from 'lodash.debounce';
 
 export default function Enter(props) {
   const {user, username} = useContext(UserContext);
-  const router = useRouter();
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -20,40 +19,34 @@ export default function Enter(props) {
       {user ? 
         !username ? <UsernameForm /> : <SignOutButton />
         : 
-        <SignInButton />
+        <SignInButton username = {username} />
       }
     </main>
   );
 }
 
 // Sign in with Google button
-function SignInButton() {
-    const signInWithGoogle = async () => {
-      await signInWithPopup(auth, googleAuthProvider);
-    };
-  
-    return (
-      <button className="btn-google" onClick={signInWithGoogle}>
-        <img src={'/google.png'} /> Sign in with Google
-      </button>
-    );
-}
+function SignInButton({ username }) {
+  const router = useRouter();
 
-// function RouteProfile( username ) {
-//   const router = useRouter();
-//   return  router.push(`/${username}`);
-// }
-// // Sign out button
-// function SignOutButton() {
-//   // return <button onClick={() => auth.signOut()}>Sign Out</button>; // v8
-//   return <button onClick={() => signOut(auth)}>Sign Out</button>;
-// }
+  const signInWithGoogle = async () => {
+    await signInWithPopup(auth, googleAuthProvider);
+    router.push(`/${username}`);
+  };
+
+  return (
+    <button className="btn-google" onClick={signInWithGoogle}>
+      <img src={'/google.png'} /> Sign in with Google
+    </button>
+  );
+}
   
   // User form
 function UsernameForm() {
   const [formValue, setFormValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const {user, username} = useContext(UserContext);
 
@@ -73,6 +66,7 @@ function UsernameForm() {
       batch.set(usernameDoc, { uid: user.uid });
 
       await batch.commit();
+      router.push(`/${username}`);
   }
 
   const onChange = (e) => {
