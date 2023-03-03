@@ -1,9 +1,9 @@
-import { auth, db, googleAuthProvider } from '@/lib/firebase'; // v8 class, v9 vars
-import { signInWithPopup, signOut } from 'firebase/auth';
+import { auth, db, googleAuthProvider } from '@/lib/firebase';
+import { signInWithPopup } from 'firebase/auth';
 import { doc, writeBatch, getDoc } from 'firebase/firestore';
 
 import { UserContext } from '@/lib/context';
-
+import SignOutButton from '@/components/SignOutButton';
 import { useEffect, useState, useCallback, useContext } from 'react';
 import debounce from 'lodash.debounce';
 
@@ -27,7 +27,6 @@ export default function Enter(props) {
 // Sign in with Google button
 function SignInButton() {
     const signInWithGoogle = async () => {
-      // await auth.signInWithPopup(googleAuthProvider); // v8
       await signInWithPopup(auth, googleAuthProvider);
     };
   
@@ -38,11 +37,11 @@ function SignInButton() {
     );
 }
   
-// Sign out button
-function SignOutButton() {
-  // return <button onClick={() => auth.signOut()}>Sign Out</button>; // v8
-  return <button onClick={() => signOut(auth)}>Sign Out</button>;
-}
+// // Sign out button
+// function SignOutButton() {
+//   // return <button onClick={() => auth.signOut()}>Sign Out</button>; // v8
+//   return <button onClick={() => signOut(auth)}>Sign Out</button>;
+// }
   
   // User form
 function UsernameForm() {
@@ -104,11 +103,8 @@ function UsernameForm() {
   const checkUsername = useCallback(
       debounce(async (username) => {
           if (username.length>=3) {
-              // const ref = firestore.doc('usernames/${usernames}'); // v8
               const ref = doc(db,"usernames",username);
 
-              // const { exists } = await ref.get(); // v8
-              // const { exists } = await getDoc(ref);
               const docSnap = await getDoc(ref);
               const exists = docSnap.exists();
               console.log('Firestone read executed!');

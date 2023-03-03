@@ -7,6 +7,7 @@ import AuthCheck from '@/components/AuthCheck';
 import PostCreation from '@/components/PostCreation';
 import { db, auth } from '@/lib/firebase';
 import getMonthDayYear from '@/components/getMonthDayYear';
+import SignOutButton from '@/components/SignOutButton';
 
 import { doc, updateDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -31,6 +32,7 @@ export default function UserProfilePage(props) {
           <VideoPlayer  downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
+          <SignOutButton />
         </AuthCheck>
     </main>
   )
