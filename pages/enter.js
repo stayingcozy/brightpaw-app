@@ -3,9 +3,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { doc, writeBatch, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 
-import Loader from '@/components/Loader';
 import { UserContext } from '@/lib/context';
-// import SignOutButton from '@/components/SignOutButton';
 import { useEffect, useState, useCallback, useContext } from 'react';
 import debounce from 'lodash.debounce';
 
@@ -18,7 +16,7 @@ export default function Enter(props) {
   return (
     <main>
       {user ? 
-        !username ? <UsernameForm /> : <Loader />
+        !username ? <UsernameForm /> : <SignInPlaceHolder />
         : 
         <SignInButton username = {username} />
       }
@@ -41,7 +39,11 @@ function SignInButton({ username }) {
     </button>
   );
 }
-  
+
+function SignInPlaceHolder() {
+ return <code className="upload-snippet">Click your profile pic above to get started.</code>
+}
+
   // User form
 function UsernameForm() {
   const [formValue, setFormValue] = useState('');
