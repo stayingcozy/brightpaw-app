@@ -19,6 +19,7 @@ import ReactPlayer from 'react-player/lazy'
 import VideoApp from '@/components/VideoApp';
 import UploadTfCoco from '@/components/UploadTfCoco';
 import YoutubeEx from '@/components/YoutubeEx';
+import OnlineEx from '@/components/OnlineEx';
 //
 
 export default function UserProfilePage(props) {
@@ -34,8 +35,9 @@ export default function UserProfilePage(props) {
         <AuthCheck>
           <VideoUploader setDownloadURL={setDownloadURL} />
           {/* <VideoApp downloadURL={downloadURL} /> */}
-          {/* <UploadTfCoco downloadURL={downloadURL}/> */}
-          <YoutubeEx downloadURL={downloadURL}/>
+          <UploadTfCoco downloadURL={downloadURL}/>
+          {/* <OnlineEx downloadURL={downloadURL}/> */}
+          {/* <YoutubeEx downloadURL={downloadURL}/> */}
           {/* <WebCamTfCoco /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   

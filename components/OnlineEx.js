@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
-import Loader from "../loader";
+// import { connect } from "react-redux";
+// import Loader from "../loader";
+import * as tf from "@tensorflow/tfjs";
+import * as cocossd from "@tensorflow-models/coco-ssd";
 
-function ResultsComponent(props) {
-  const { dataFile, models } = props;
+export default function ResultsComponent({ dataFile }) {
+  // const { dataFile, models } = props;
+  const models = cocossd.load();
+
   const videoRef = useRef(null);
   const videoStreamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -134,11 +138,7 @@ function ResultsComponent(props) {
 
   return (
     <div>
-      {changingVideo ? (
-        <Loader />
-      ) : (
         <>
-          {videoObj ? (
             <div>
               <video
                 id="video-input-video-src"
@@ -147,15 +147,6 @@ function ResultsComponent(props) {
                 width="480"
                 height="440"
                 muted
-                style={{
-                  position: "absolute",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  top: "10px",
-                  left: "10px",
-                  textAlign: "left",
-                  zindex: 9,
-                }}
               />
               <video
                 id="video-input-video-stream"
@@ -163,15 +154,6 @@ function ResultsComponent(props) {
                 width="480"
                 playsInline
                 muted
-                style={{
-                  position: "absolute",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  top: "6em",
-                  right: "10px",
-                  textAlign: "right",
-                  zindex: 9,
-                }}
               />
 
               <canvas
@@ -189,16 +171,14 @@ function ResultsComponent(props) {
                 }}
               />
             </div>
-          ) : null}
         </>
-      )}
     </div>
   );
 }
 
-const mapStateToProps = (state) => {
-  const { models } = state;
-  return { models };
-};
+// const mapStateToProps = (state) => {
+//   const { models } = state;
+//   return { models };
+// };
 
-export default connect(mapStateToProps, null)(ResultsComponent);
+// export default connect(mapStateToProps, null)(ResultsComponent);

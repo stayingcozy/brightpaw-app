@@ -28,7 +28,9 @@ export default function Tensorflow({downloadURL}) {
             width = "600" 
             crossOrigin="anonymous"
             />
-            <button onClick={predict}> Predict Class </button>
+            <button onClick={predict}> 
+                Predict Class 
+            </button>
             <button onClick={() => vidRef.current.play()}>
                 Play
             </button>

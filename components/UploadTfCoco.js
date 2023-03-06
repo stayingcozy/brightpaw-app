@@ -1,95 +1,97 @@
-import React, { useRef, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
+import { useState } from "react";
 
-import { drawRect } from "@/lib/utilities";
+import { useEffect, useRef } from "react";
 
-export default function UploadTfCoco(downloadURL) {
-  const vidRef = useRef(null);
-  const canvasRef = useRef(null);
+export default function Tensorflow({downloadURL}) {
+    const vidRef = useRef();
+    const [busy, setBusy] = useState(false);
+    const [playing, setPlaying] = useState(false);
 
-  // Main function
-  const runCoco = async () => {
-    // Load the network
-    const net = await cocossd.load();
-    
-    //  Loop and detect hands
-    // setInterval(() => {
-    //   detect(net);
-    // }, 20); // 10
-  };
+    function predict() {
+        const vid = vidRef.current;
+        // console.log(vid);
 
-  function predict() {
-      const vid = vidRef.current;
-      console.log(vid);
-
-      // Load the model.
-      cocossd.load().then(model => {
-      // detect objects in the image.
-      model.detect(vid).then(predictions => {
-      console.log('Predictions: ', predictions);
-          });
-      });
-  }
-
-  const detect = async (net) => {
-    // Check data is available
-    if (
-      vidRef.current !== null
-    ) {
-      console.log(vidRef.current);
-
-      // Get Video Properties
-      const video = vidRef.current;
-      // const videoWidth = vidRef.current.video.videoWidth;
-      // const videoHeight = vidRef.current.video.videoHeight;
-
-      // // Set video width
-      // vidRef.current.video.width = videoWidth;
-      // vidRef.current.video.height = videoHeight;
-
-      // // Set canvas height and width
-      // canvasRef.current.width = videoWidth;
-      // canvasRef.current.height = videoHeight;
-
-      // Make Detections
-      const obj = await net.detect(video);
-      console.log(obj);
-
-      // // Draw mesh
-      // const ctx = canvasRef.current.getContext("2d");
-
-      // // Update drawing utility
-      // drawRect(obj, ctx);
+        // Load the model.
+        cocossd.load().then(model => {
+        // detect objects in the image.
+        model.detect(vid).then(predictions => {
+        console.log('Predictions: ', predictions);
+            });
+        });
     }
-  };
 
-  useEffect(()=>{runCoco()},[]);
+    function prediction_loop() {
 
-  return (
-    <main>
-        <button onClick={predict}> Predict Class </button>
-        <video 
-        src={downloadURL} 
-        ref={vidRef}
-        width = "600" 
-        crossOrigin="anonymous"
-        />
+      //  Loop and detect hands
+      setInterval(() => {
+        detect();
+      }, 100);
+    }
 
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 8,
-            width: 640,
-            height: 480,
-          }}
-        />
-    </main>
-  );
+    function detect() {
+      if (!busy && playing) {
+
+        const vid = vidRef.current;
+
+        setBusy(() => true);
+        // Load the model.
+        cocossd.load().then(model => {
+          // detect objects in the image.
+          model.detect(vid).then(predictions => {
+          console.log('Predictions: ', predictions);
+              });
+          });
+        setBusy(() => false);
+      }
+    }
+
+    function play() {
+      vidRef.current.play();
+      setPlaying(() => true);
+    }
+
+    function pause() {
+      () => vidRef.current.pause();
+      setPlaying(() => false);
+    }
+
+    // if (!busy && playing) {
+
+    //   const vid = vidRef.current;
+
+    //   setBusy(() => true);
+    //   // Load the model.
+    //   cocossd.load().then(model => {
+    //     // detect objects in the image.
+    //     model.detect(vid).then(predictions => {
+    //     console.log('Predictions: ', predictions);
+    //         });
+    //     });
+    //   setBusy(() => false);
+    // }
+
+    return (
+        <div>
+            <video 
+            src={downloadURL} 
+            ref={vidRef}
+            width = "600" 
+            crossOrigin="anonymous"
+            />
+            <button onClick={predict}> 
+                Predict Class 
+            </button>
+            <button onClick={prediction_loop}>
+                Predict loop start 👻
+            </button>
+            <button onClick={play}>
+                Play
+            </button>
+            <button onClick={pause}>
+                Pause
+            </button>
+        </div>
+    )
 }
