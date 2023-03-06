@@ -11,7 +11,7 @@ export default function PostCreation({ date }) {
     // get username from url
     const router = useRouter();
     const { username } = router.query;
-    console.log(username);
+    // console.log(username);
 
     // check if posts exist for user
     const postRef = doc(db,"users",`${uid}`,'posts',`${date}`);

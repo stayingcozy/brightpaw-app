@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.2",
+    "@tensorflow/tfjs": "^4.2.0",
     "firebase": "^9.17.1",
     "lodash.debounce": "^4.0.8",
     "next": "13.2.1",
@@ -18,6 +20,7 @@
     "react-hook-form": "^7.43.3",
     "react-hot-toast": "^2.4.0",
     "react-markdown": "^8.0.5",
-    "react-player": "^2.11.2"
+    "react-player": "^2.11.2",
+    "react-webcam": "^7.0.1"
   }
 }

@@ -6,7 +6,7 @@ import { auth, storage } from '@/lib/firebase';
 import Loader from './Loader';
 
 // Uploads images to Firebase Storage
-export default function VideoUploader({ downloadURL, setDownloadURL }) {
+export default function VideoUploader({ setDownloadURL }) {
 
   const [uploading, setUploading] = useState(false); // true if file is being uploaded to the cloud
   const [progress, setProgress] = useState(0); // progress of the upload %
@@ -80,7 +80,7 @@ export default function VideoUploader({ downloadURL, setDownloadURL }) {
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(storageRef).then((URL) => {
-        console.log('File available at', URL);
+        // console.log('File available at', URL);
         setDownloadURL(URL);
         setUploading(false);
         toast.success('Uploaded Video')

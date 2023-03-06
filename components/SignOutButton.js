@@ -16,6 +16,5 @@ export default function SignOutButton() {
 
     return(
         <button onClick={signoutEnter}>Sign Out</button>
-
     )
 }

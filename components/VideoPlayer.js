@@ -1,6 +1,6 @@
-import ReactPlayer from 'react-player/lazy'
+import ReactPlayer from 'react-player';
 
-export default function VideoPlayer({ downloadURL, setDownloadURL }) {
+export default function VideoPlayer({ downloadURL }) {
   return (
     <main>
       <ReactPlayer id="myvid"

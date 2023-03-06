@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import styles from '@/styles/Admin.module.css';
 import VideoUploader from "@/components/VideoUploader";
@@ -6,15 +6,19 @@ import VideoPlayer from "@/components/VideoPlayer";
 import AuthCheck from '@/components/AuthCheck';
 import PostCreation from '@/components/PostCreation';
 import { db, auth } from '@/lib/firebase';
-import getMonthDayYear from '@/components/getMonthDayYear';
+import getMonthDayYear from '@/lib/getMonthDayYear';
 import SignOutButton from '@/components/SignOutButton';
+import WebCamTfCoco from '@/components/WebCamTfCoco';
 
 import { doc, updateDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useForm } from 'react-hook-form'; // keep track of form inputs, and if form is valid,invalid
 import ReactMarkdown from 'react-markdown'; // markdown notation for post
 import toast from 'react-hot-toast';
-
+import ReactPlayer from 'react-player/lazy'
+import VideoApp from '@/components/VideoApp';
+import UploadTfCoco from '@/components/UploadTfCoco';
+import YoutubeEx from '@/components/YoutubeEx';
 //
 
 export default function UserProfilePage(props) {
@@ -28,8 +32,11 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          <VideoUploader downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
-          <VideoPlayer  downloadURL={downloadURL} setDownloadURL={setDownloadURL} />
+          <VideoUploader setDownloadURL={setDownloadURL} />
+          {/* <VideoApp downloadURL={downloadURL} /> */}
+          {/* <UploadTfCoco downloadURL={downloadURL}/> */}
+          <YoutubeEx downloadURL={downloadURL}/>
+          {/* <WebCamTfCoco /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
         </AuthCheck>
