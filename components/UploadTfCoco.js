@@ -1,97 +1,104 @@
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
-import { useState } from "react";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Tensorflow({downloadURL}) {
-    const vidRef = useRef();
-    const [busy, setBusy] = useState(false);
-    const [playing, setPlaying] = useState(false);
+  const vidRef = useRef();
+  const [busy, setBusy] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [net, setNet] = useState();
 
-    function predict() {
-        const vid = vidRef.current;
-        // console.log(vid);
+  function predict() {
+      const vid = vidRef.current;
+      // console.log(vid);
 
-        // Load the model.
-        cocossd.load().then(model => {
-        // detect objects in the image.
-        model.detect(vid).then(predictions => {
-        console.log('Predictions: ', predictions);
-            });
-        });
-    }
+      // Load the model.
+      cocossd.load().then(model => {
+      // detect objects in the image.
+      model.detect(vid).then(predictions => {
+      console.log('Predictions: ', predictions);
+          });
+      });
+  }
 
-    function prediction_loop() {
+  async function play() {
+    vidRef.current.play();
+    setPlaying(true);
+  }
 
-      //  Loop and detect hands
-      setInterval(() => {
-        detect();
-      }, 100);
-    }
+  async function pause() {
+    vidRef.current.pause();
+    setPlaying(false);
+  }
 
-    function detect() {
+  // Apply ML model when video is playing
+  useEffect( () => {
+    async function detect() {
       if (!busy && playing) {
-
         const vid = vidRef.current;
+  
+        console.log({playing});
+        console.log({busy});
+  
+        // const model = await cocossd.load();
 
         setBusy(() => true);
-        // Load the model.
-        cocossd.load().then(model => {
-          // detect objects in the image.
-          model.detect(vid).then(predictions => {
-          console.log('Predictions: ', predictions);
-              });
-          });
+        // // Load the model.
+        // cocossd.load().then(model => {
+        //   // detect objects in the image.
+        //   model.detect(vid).then(predictions => {
+        //   console.log('Predictions: ', predictions);
+        //       });
+        //   });
+
+        // Make Detections
+        const predictions = await net.detect(vid);
+        console.log('Predictions: ',predictions)
+
         setBusy(() => false);
       }
     }
 
-    function play() {
-      vidRef.current.play();
-      setPlaying(() => true);
-    }
+    //  Loop detection
+    const interval = setInterval(() => {
+      detect();
+    }, 1000);
 
-    function pause() {
-      () => vidRef.current.pause();
-      setPlaying(() => false);
-    }
+    return () => clearInterval(interval); // on unmount clear interval
+  }, [playing] ); // dependent on state playing
 
-    // if (!busy && playing) {
 
-    //   const vid = vidRef.current;
+  async function loadCOCO() {
+    const coco = await cocossd.load();
+    setNet(coco);
+  }
+  // Load model on start
+  useEffect( () => {
+    tf.ready().then(()=>{
+      loadCOCO();
+    })
+  },[])
 
-    //   setBusy(() => true);
-    //   // Load the model.
-    //   cocossd.load().then(model => {
-    //     // detect objects in the image.
-    //     model.detect(vid).then(predictions => {
-    //     console.log('Predictions: ', predictions);
-    //         });
-    //     });
-    //   setBusy(() => false);
-    // }
-
-    return (
-        <div>
-            <video 
-            src={downloadURL} 
-            ref={vidRef}
-            width = "600" 
-            crossOrigin="anonymous"
-            />
-            <button onClick={predict}> 
-                Predict Class 
-            </button>
-            <button onClick={prediction_loop}>
-                Predict loop start 👻
-            </button>
-            <button onClick={play}>
-                Play
-            </button>
-            <button onClick={pause}>
-                Pause
-            </button>
-        </div>
-    )
+  return (
+      <div>
+          <video 
+          // autoPlay 
+          onEnded={() => setPlaying(false)}
+          src={downloadURL} 
+          ref={vidRef}
+          width = "600" 
+          crossOrigin="anonymous"
+          />
+          {/* <button onClick={predict}> 
+              Predict Class 
+          </button> */}
+          <button onClick={play}>
+              Play
+          </button>
+          <button onClick={pause}>
+              Pause
+          </button>
+      </div>
+  )
 }

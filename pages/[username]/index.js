@@ -20,6 +20,7 @@ import VideoApp from '@/components/VideoApp';
 import UploadTfCoco from '@/components/UploadTfCoco';
 import YoutubeEx from '@/components/YoutubeEx';
 import OnlineEx from '@/components/OnlineEx';
+import TestHooksCallback from '@/components/TestHooksCallback';
 //
 
 export default function UserProfilePage(props) {
