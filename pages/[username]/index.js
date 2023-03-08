@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 
 import styles from '@/styles/Admin.module.css';
 import VideoUploader from "@/components/VideoUploader";
-import VideoPlayer from "@/components/VideoPlayer";
 import AuthCheck from '@/components/AuthCheck';
 import PostCreation from '@/components/PostCreation';
 import { db, auth } from '@/lib/firebase';
@@ -15,12 +14,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useForm } from 'react-hook-form'; // keep track of form inputs, and if form is valid,invalid
 import ReactMarkdown from 'react-markdown'; // markdown notation for post
 import toast from 'react-hot-toast';
-import ReactPlayer from 'react-player/lazy'
-import VideoApp from '@/components/VideoApp';
 import UploadTfCoco from '@/components/UploadTfCoco';
-import YoutubeEx from '@/components/YoutubeEx';
-import OnlineEx from '@/components/OnlineEx';
-import TestHooksCallback from '@/components/TestHooksCallback';
 //
 
 export default function UserProfilePage(props) {
@@ -35,10 +29,7 @@ export default function UserProfilePage(props) {
     <main>
         <AuthCheck>
           <VideoUploader setDownloadURL={setDownloadURL} />
-          {/* <VideoApp downloadURL={downloadURL} /> */}
-          <UploadTfCoco downloadURL={downloadURL}/>
-          {/* <OnlineEx downloadURL={downloadURL}/> */}
-          {/* <YoutubeEx downloadURL={downloadURL}/> */}
+          <UploadTfCoco downloadURL={downloadURL} />
           {/* <WebCamTfCoco /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
