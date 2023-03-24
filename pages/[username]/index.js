@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'; // keep track of form inputs, and if 
 import ReactMarkdown from 'react-markdown'; // markdown notation for post
 import toast from 'react-hot-toast';
 import UploadTfCoco from '@/components/UploadTfCoco';
+import WebRTC from '@/components/WebRTC';
 //
 
 export default function UserProfilePage(props) {
@@ -28,6 +29,7 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
+          <WebRTC />
           <VideoUploader setDownloadURL={setDownloadURL} />
           <UploadTfCoco downloadURL={downloadURL} />
           {/* <WebCamTfCoco /> */}
