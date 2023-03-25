@@ -16,6 +16,9 @@ import ReactMarkdown from 'react-markdown'; // markdown notation for post
 import toast from 'react-hot-toast';
 import UploadTfCoco from '@/components/UploadTfCoco';
 import WebRTC from '@/components/WebRTC';
+import RemoteWebRTC from '@/components/RemoteWebRTC';
+import RemoteWebRTCTFCoco from '@/components/RemoteWebRTC_TFCoco'
+import WebRTCuser from '@/components/WebRTCuser';
 //
 
 export default function UserProfilePage(props) {
@@ -29,10 +32,12 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          <WebRTC />
-          <VideoUploader setDownloadURL={setDownloadURL} />
-          <UploadTfCoco downloadURL={downloadURL} />
-          {/* <WebCamTfCoco /> */}
+          {/* <WebRTC /> */}
+          <WebRTCuser />
+          {/* <RemoteWebRTC /> */}
+          {/* <RemoteWebRTCTFCoco /> */}
+          {/* <VideoUploader setDownloadURL={setDownloadURL} />
+          <UploadTfCoco downloadURL={downloadURL} /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
         </AuthCheck>

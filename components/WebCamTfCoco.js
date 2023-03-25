@@ -44,7 +44,7 @@ export default function WebCamTfCoco() {
 
       // Make Detections
       const obj = await net.detect(video);
-    //   console.log(obj);
+      // console.log(obj);
 
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
