@@ -19,6 +19,7 @@ import WebRTC from '@/components/WebRTC';
 import RemoteWebRTC from '@/components/RemoteWebRTC';
 import RemoteWebRTCTFCoco from '@/components/RemoteWebRTC_TFCoco'
 import WebRTCuser from '@/components/WebRTCuser';
+import WebRTCpi from '@/components/WebRTCpi';
 //
 
 export default function UserProfilePage(props) {
@@ -33,7 +34,8 @@ export default function UserProfilePage(props) {
     <main>
         <AuthCheck>
           {/* <WebRTC /> */}
-          <WebRTCuser />
+          {/* <WebRTCuser /> */}
+          <WebRTCpi />
           {/* <RemoteWebRTC /> */}
           {/* <RemoteWebRTCTFCoco /> */}
           {/* <VideoUploader setDownloadURL={setDownloadURL} />

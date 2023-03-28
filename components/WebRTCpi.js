@@ -4,7 +4,7 @@ import { servers } from '@/lib/servers';
 import { collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 import { useEffect, useRef } from 'react';
 
-export default function WebRTCuser() {
+export default function WebRTCpi() {
 
     // get user firebase id
     const uid = auth.currentUser.uid;
@@ -12,7 +12,7 @@ export default function WebRTCuser() {
     // Global State
     const pc = new RTCPeerConnection(servers);
 
-    const localVideoRef = useRef(null);
+    // const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const callInputRef = useRef(null);
 
@@ -24,7 +24,8 @@ export default function WebRTCuser() {
     // 1. Setup media sources
 
     async function webcam_init() {
-        const localStream = await navigator.mediaDevices.getUserMedia({ video: true }); // audio: true
+        const localStream = await navigator.mediaDevices.getUserMedia({ video: true }); // video:true, audio: true
+        // video must be true for pi to accept call (appears as of now)
         const remoteStream = new MediaStream();
 
         // Push tracks from local stream to peer connection
@@ -39,7 +40,7 @@ export default function WebRTCuser() {
             });
         };
 
-        localVideoRef.current.srcObject = localStream;
+        // localVideoRef.current.srcObject = localStream;
         remoteVideoRef.current.srcObject = remoteStream;
 
     };
@@ -51,7 +52,7 @@ export default function WebRTCuser() {
         const callDoc = doc(collection(db,'users',`${uid}`,'calls'));
         const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
 
-        callInputRef.current.value = callDoc.id;
+        // callInputRef.current.value = callDoc.id;
 
         // Get candidates for caller, save to db
         pc.onicecandidate = (event) => {
@@ -138,13 +139,6 @@ export default function WebRTCuser() {
     return (
         <>
             <div>
-                <h3> Local Stream </h3>
-                <video 
-                    ref={localVideoRef}
-                    autoPlay
-                />
-            </div>
-            <div>
                <h3> Remote Stream </h3>
                <video 
                     ref={remoteVideoRef}
@@ -152,18 +146,9 @@ export default function WebRTCuser() {
                 />
             </div>
 
-            <button onClick={webcam_init}>Start webcam</button>
+            <button onClick={call}> Call ☎️  </button>
 
-            <h2>2. Create a new Call</h2>
-            <button onClick={call}>Create Call (offer)</button>
-
-            <h2>3. Join a Call</h2>
-            <p>Answer the call from a different browser window or device</p>
-            
-            <input ref = {callInputRef} />
-            <button onClick={answer}>Answer</button>
-
-            <button onClick={hangup}>Hangup</button>
+            {/* <button onClick={hangup}>Hangup</button> */}
 
         </>
     )
