@@ -7,7 +7,7 @@ import PostCreation from '@/components/PostCreation';
 import { db, auth } from '@/lib/firebase';
 import getMonthDayYear from '@/lib/getMonthDayYear';
 import SignOutButton from '@/components/SignOutButton';
-import WebCamTfCoco from '@/components/WebCamTfCoco';
+// import WebCamTfCoco from '@/components/WebCamTfCoco';
 
 import { doc, updateDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -15,11 +15,13 @@ import { useForm } from 'react-hook-form'; // keep track of form inputs, and if 
 import ReactMarkdown from 'react-markdown'; // markdown notation for post
 import toast from 'react-hot-toast';
 import UploadTfCoco from '@/components/UploadTfCoco';
-import WebRTC from '@/components/WebRTC';
-import RemoteWebRTC from '@/components/RemoteWebRTC';
-import RemoteWebRTCTFCoco from '@/components/RemoteWebRTC_TFCoco'
-import WebRTCuser from '@/components/WebRTCuser';
+// import WebRTC from '@/components/WebRTC';
+// import RemoteWebRTC from '@/components/RemoteWebRTC';
+// import RemoteWebRTCTFCoco from '@/components/RemoteWebRTC_TFCoco'
+// import WebRTCuser from '@/components/WebRTCuser';
 import WebRTCpi from '@/components/WebRTCpi';
+import ConnectBLE from '@/components/ConnectBLE';
+// import UploadRoboflow from '@/components/UploadRoboflow';
 //
 
 export default function UserProfilePage(props) {
@@ -33,13 +35,13 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          {/* <WebRTC /> */}
-          {/* <WebRTCuser /> */}
+          <ConnectBLE />
+
           <WebRTCpi />
-          {/* <RemoteWebRTC /> */}
           {/* <RemoteWebRTCTFCoco /> */}
-          {/* <VideoUploader setDownloadURL={setDownloadURL} />
-          <UploadTfCoco downloadURL={downloadURL} /> */}
+          <VideoUploader setDownloadURL={setDownloadURL} />
+          <UploadTfCoco downloadURL={downloadURL} />
+          {/* <UploadRoboflow downloadURL={downloadURL} /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
         </AuthCheck>
