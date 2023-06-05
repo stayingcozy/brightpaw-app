@@ -21,6 +21,8 @@ import UploadTfCoco from '@/components/UploadTfCoco';
 // import WebRTCuser from '@/components/WebRTCuser';
 import WebRTCpi from '@/components/WebRTCpi';
 import ConnectBLE from '@/components/ConnectBLE';
+import joystick from '@/components/Joystick';
+import { Joystick } from 'react-joystick-component';
 // import UploadRoboflow from '@/components/UploadRoboflow';
 //
 
@@ -35,7 +37,8 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          <ConnectBLE />
+          {/* <ConnectBLE /> */}
+          {/* <Joystick /> */}
 
           <WebRTCpi />
           {/* <RemoteWebRTCTFCoco /> */}

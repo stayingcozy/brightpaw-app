@@ -146,7 +146,7 @@ export default function WebRTCpi() {
                 />
             </div>
 
-            <button onClick={call}> Call ☎️  </button>
+            <button onClick={call}> Connect 🎥  </button>
 
             {/* <button onClick={hangup}>Hangup</button> */}
 
