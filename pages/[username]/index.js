@@ -24,12 +24,15 @@ import ConnectBLE from '@/components/ConnectBLE';
 import joystick from '@/components/Joystick';
 import { Joystick } from 'react-joystick-component';
 // import UploadRoboflow from '@/components/UploadRoboflow';
+import IntervalMetric from '@/components/IntervalMetric';
 //
 
 export default function UserProfilePage(props) {
 
   // props to pass to video component children
   const [downloadURL, setDownloadURL] = useState(null); // download link avail when complete
+  const [playing, setPlaying] = useState(false); // if upload video is playing
+  const [dogInView, setDogInView] = useState(0); // if upload video is playing
 
   // get date
   const todaysDate = getMonthDayYear();
@@ -40,11 +43,12 @@ export default function UserProfilePage(props) {
           {/* <ConnectBLE /> */}
           {/* <Joystick /> */}
 
-          <WebRTCpi />
+          <WebRTCpi setPlaying={setPlaying}/>
           {/* <RemoteWebRTCTFCoco /> */}
           <VideoUploader setDownloadURL={setDownloadURL} />
-          <UploadTfCoco downloadURL={downloadURL} />
+          <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} />
           {/* <UploadRoboflow downloadURL={downloadURL} /> */}
+          <IntervalMetric playing={playing} dogInView={dogInView} />
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
         </AuthCheck>

@@ -4,7 +4,7 @@ import { servers } from '@/lib/servers';
 import { collection, doc, onSnapshot, setDoc, getDoc, updateDoc, query } from 'firebase/firestore';
 import { useEffect, useRef } from 'react';
 
-export default function WebRTCpi() {
+export default function WebRTCpi({setPlaying}) {
 
     // get user firebase id
     const uid = auth.currentUser.uid;
@@ -74,8 +74,8 @@ export default function WebRTCpi() {
         onSnapshot(callDoc, (snapshot) => {
             const data = snapshot.data();
             if (!pc.currentRemoteDescription && data?.answer) {
-            const answerDescription = new RTCSessionDescription(data.answer);
-            pc.setRemoteDescription(answerDescription);
+                const answerDescription = new RTCSessionDescription(data.answer);
+                pc.setRemoteDescription(answerDescription);
             }
         });
 
@@ -86,6 +86,9 @@ export default function WebRTCpi() {
             if (change.type === 'added') {
                 const candidate = new RTCIceCandidate(change.doc.data());
                 pc.addIceCandidate(candidate);
+
+                // set playing to true for analytics 
+                setPlaying(true);
             }
             });
         });

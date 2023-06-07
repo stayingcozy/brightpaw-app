@@ -4,15 +4,19 @@ import { useEffect, useRef, useState } from "react";
 
 import {drawRect} from '@/lib/utilities'
 
-export default function UploadTfCoco({downloadURL}) {
+export default function UploadTfCoco({downloadURL,playing,setPlaying,setDogInView}) {
   const vidRef = useRef();
   const canvasRef = useRef(null);
   const [busy, setBusy] = useState(false);
-  const [playing, setPlaying] = useState(false);
+  // const [playing, setPlaying] = useState(false);
   const [net, setNet] = useState();
 
   const DETECT_INTERVAL = 5; // milli-seconds 
   const VIDEO_WIDTH = 600;
+
+  var pred_len;
+  var num_total_pred=0;
+  var num_dog_pred=0;
 
   async function play() {
     vidRef.current.play();
@@ -32,7 +36,18 @@ export default function UploadTfCoco({downloadURL}) {
         setBusy(() => true);
         // Make Detections
         const predictions = await net.detect(vid);
-        // console.log('Predictions: ',predictions);
+
+        pred_len = predictions.length;
+        for (let i=0;i<pred_len;i++) {
+          // console.log('Predictions: ',predictions[i]);
+          if (predictions[i].class == "dog" && predictions[i].score > 0.80) {
+            console.log('Predictions: ',predictions[i].class, "| Confidence: ", predictions[i].score);
+            num_dog_pred++;
+          }
+          num_total_pred++;
+        }
+
+        setDogInView(num_dog_pred/num_total_pred)
         
         //clear pre-existing stroke
         // ctx.clearRect(0, 0, canvas.width, canvas.height);
