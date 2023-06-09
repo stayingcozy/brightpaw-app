@@ -37,12 +37,9 @@ export default function PostCreation({ date }) {
     async function get_post(postRef, date, uid) {
         // get post document
         const postSnap =  await getDoc(postRef);
-        // console.log("Check if snap is true");
-        // console.log(postSnap.exists());
-
+        
         // if it doesn't exist create a new post
         if (!postSnap.exists()) {
-            // console.log("Created Post");
             createPost(date, uid);
         }
     }
