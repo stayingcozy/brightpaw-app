@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "mocha --exit test/*.spec.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -25,5 +26,10 @@
     "react-player": "^2.11.2",
     "react-webcam": "^7.0.1",
     "roboflow": "^0.1.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^2.0.7",
+    "firebase-admin": "^11.9.0",
+    "mocha": "^10.2.0"
   }
 }

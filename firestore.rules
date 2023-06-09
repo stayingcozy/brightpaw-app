@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, create: if isOwner(userId) && isNow();
+      // allow create: if isValidPost();
+      // allow update: if isValidUpdatedPost();
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isNow() {
+      return request.resource.data.createdAt == request.time;
+    }
+
+    function isValidPost() {
+      let post = request.resource.data;
+      let isOwner = post.uid == request.auth.uid;
+      let isNow = request.time == request.resource.data.createdAt;
+      let hasRequiredFields = post.keys().hasAll(['content', 'createdAt', 'uid', 'updatedAt','username']);
+
+      return isOwner && hasRequiredFields && isNow;
+    }
+
+    function isValidUpdatedPost() {
+      let post = request.resource.data;
+      let hasRequiredFields = post.keys().hasAny(['content', 'createdAt', 'uid', 'updatedAt','username']);
+      // let noMetaFields = post.keys().hasOnly(['content']);
+      let isValidContent = post.content is string && post.content.size() < 10000;
+
+      return hasRequiredFields && isValidContent;
+    }
+  }
+}

@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Firestore Rule Coverage Report</title>
+<style>
+.coverage-expr {
+  padding-bottom: 4px;
+  display: inline-block;
+  border-bottom: 3px solid black;
+  vertical-align: top;
+}
+.coverage-expr:hover {
+  background-color: rgba(255, 100, 100, 0.2);
+  cursor: default;
+  border-bottom: 3px solid red;
+}
+</style>
+
+<script>
+// Populated by the emulator at runtime
+const data = {
+  "rules": {
+    "files": [{
+      "content": "rules_version \u003d \u00272\u0027;\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{userId} {\n      allow read, create: if isOwner(userId) \u0026\u0026 isNow();\n      // allow create: if isValidPost();\n      // allow update: if isValidUpdatedPost();\n    }\n\n    function isOwner(userId) {\n      return request.auth.uid \u003d\u003d userId;\n    }\n\n    function isNow() {\n      return request.resource.data.createdAt \u003d\u003d request.time;\n    }\n\n    function isValidPost() {\n      let post \u003d request.resource.data;\n      let isOwner \u003d post.uid \u003d\u003d request.auth.uid;\n      let isNow \u003d request.time \u003d\u003d request.resource.data.createdAt;\n      let hasRequiredFields \u003d post.keys().hasAll([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n\n      return isOwner \u0026\u0026 hasRequiredFields \u0026\u0026 isNow;\n    }\n\n    function isValidUpdatedPost() {\n      let post \u003d request.resource.data;\n      let hasRequiredFields \u003d post.keys().hasAny([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n      // let noMetaFields \u003d post.keys().hasOnly([\u0027content\u0027]);\n      let isValidContent \u003d post.content is string \u0026\u0026 post.content.size() \u003c 10000;\n\n      return hasRequiredFields \u0026\u0026 isValidContent;\n    }\n  }\n}"
+    }]
+  },
+  "report": [{
+    "sourcePosition": {
+      "line": 11,
+      "column": 14,
+      "currentOffset": 314,
+      "endOffset": 339
+    },
+    "values": [{
+      "value": {
+        "undefined": {
+          "sourcePosition": {
+            "line": 11,
+            "column": 14,
+            "currentOffset": 314,
+            "endOffset": 320
+          },
+          "causeMessage": "Null value error."
+        }
+      },
+      "count": 2
+    }, {
+      "value": {
+        "boolValue": true
+      },
+      "count": 3
+    }, {
+      "value": {
+        "boolValue": false
+      },
+      "count": 1
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 11,
+        "column": 14,
+        "currentOffset": 314,
+        "endOffset": 329
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 11,
+              "column": 14,
+              "currentOffset": 314,
+              "endOffset": 320
+            },
+            "causeMessage": "Null value error."
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "stringValue": "alice"
+        },
+        "count": 4
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 11,
+          "column": 14,
+          "currentOffset": 314,
+          "endOffset": 325
+        },
+        "values": [{
+          "value": {
+            "nullValue": null
+          },
+          "count": 2
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "uid": {
+                  "stringValue": "alice"
+                },
+                "token": {
+                  "mapValue": {
+                    "fields": {
+                      "iss": {
+                        "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                      },
+                      "aud": {
+                        "stringValue": "brightpaw-d6fd6"
+                      },
+                      "iat": {
+                        "intValue": "0"
+                      },
+                      "exp": {
+                        "intValue": "3600"
+                      },
+                      "auth_time": {
+                        "intValue": "0"
+                      },
+                      "sub": {
+                        "stringValue": "alice"
+                      },
+                      "user_id": {
+                        "stringValue": "alice"
+                      },
+                      "firebase": {
+                        "mapValue": {
+                          "fields": {
+                            "sign_in_provider": {
+                              "stringValue": "custom"
+                            },
+                            "identities": {
+                              "mapValue": {
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "count": 4
+        }],
+        "children": [{
+          "sourcePosition": {
+            "line": 11,
+            "column": 14,
+            "currentOffset": 314,
+            "endOffset": 320
+          },
+          "values": [{
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-09T15:45:49.995Z"
+                  },
+                  "auth": {
+                    "nullValue": null
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": false
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "foobar"
+                      }]
+                    }
+                  },
+                  "fields": {
+                    "nullValue": null
+                  },
+                  "method": {
+                    "stringValue": "get"
+                  }
+                }
+              }
+            },
+            "count": 2
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-09T15:45:50.125Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-09T15:45:50.125Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              },
+                              "createdAt": {
+                                "timestampValue": "2023-06-09T15:45:50.125Z"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-09T15:45:50.140Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "bob"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-09T15:45:50.158Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "nullValue": null
+                  },
+                  "writeFields": {
+                    "nullValue": null
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }]
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 11,
+        "column": 34,
+        "currentOffset": 334,
+        "endOffset": 339
+      },
+      "values": [{
+        "value": {
+          "stringValue": "foobar"
+        },
+        "count": 2
+      }, {
+        "value": {
+          "stringValue": "alice"
+        },
+        "count": 3
+      }, {
+        "value": {
+          "stringValue": "bob"
+        },
+        "count": 1
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 15,
+      "column": 14,
+      "currentOffset": 385,
+      "endOffset": 431
+    },
+    "values": [{
+      "value": {
+        "undefined": {
+          "sourcePosition": {
+            "line": 15,
+            "column": 14,
+            "currentOffset": 385,
+            "endOffset": 391
+          },
+          "causeMessage": "Property resource is undefined on object."
+        }
+      },
+      "count": 2
+    }, {
+      "value": {
+        "undefined": {
+        }
+      },
+      "count": 1
+    }, {
+      "value": {
+        "boolValue": true
+      },
+      "count": 1
+    }, {
+      "value": {
+        "undefined": {
+          "sourcePosition": {
+            "line": 15,
+            "column": 14,
+            "currentOffset": 385,
+            "endOffset": 391
+          },
+          "causeMessage": "Property createdAt is undefined on object."
+        }
+      },
+      "count": 1
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 15,
+        "column": 14,
+        "currentOffset": 385,
+        "endOffset": 415
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 15,
+              "column": 14,
+              "currentOffset": 385,
+              "endOffset": 391
+            },
+            "causeMessage": "Property resource is undefined on object."
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "timestampValue": "2023-06-09T15:45:50.125Z"
+        },
+        "count": 1
+      }, {
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 15,
+              "column": 14,
+              "currentOffset": 385,
+              "endOffset": 391
+            },
+            "causeMessage": "Property createdAt is undefined on object."
+          }
+        },
+        "count": 1
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 15,
+          "column": 14,
+          "currentOffset": 385,
+          "endOffset": 405
+        },
+        "values": [{
+          "value": {
+            "undefined": {
+              "sourcePosition": {
+                "line": 15,
+                "column": 14,
+                "currentOffset": 385,
+                "endOffset": 391
+              },
+              "causeMessage": "Property resource is undefined on object."
+            }
+          },
+          "count": 2
+        }, {
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "birthday": {
+                  "stringValue": "January 1"
+                },
+                "createdAt": {
+                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                }
+              }
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "birthday": {
+                  "stringValue": "January 1"
+                }
+              }
+            }
+          },
+          "count": 1
+        }],
+        "children": [{
+          "sourcePosition": {
+            "line": 15,
+            "column": 14,
+            "currentOffset": 385,
+            "endOffset": 400
+          },
+          "values": [{
+            "value": {
+              "undefined": {
+                "sourcePosition": {
+                  "line": 15,
+                  "column": 14,
+                  "currentOffset": 385,
+                  "endOffset": 391
+                },
+                "causeMessage": "Property resource is undefined on object."
+              }
+            },
+            "count": 2
+          }, {
+            "value": {
+              "undefined": {
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "data": {
+                    "mapValue": {
+                      "fields": {
+                        "birthday": {
+                          "stringValue": "January 1"
+                        },
+                        "createdAt": {
+                          "timestampValue": "2023-06-09T15:45:50.125Z"
+                        }
+                      }
+                    }
+                  },
+                  "__name__": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "id": {
+                    "stringValue": "alice"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "data": {
+                    "mapValue": {
+                      "fields": {
+                        "birthday": {
+                          "stringValue": "January 1"
+                        }
+                      }
+                    }
+                  },
+                  "__name__": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "id": {
+                    "stringValue": "alice"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }],
+          "children": [{
+            "sourcePosition": {
+              "line": 15,
+              "column": 14,
+              "currentOffset": 385,
+              "endOffset": 391
+            },
+            "values": [{
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-09T15:45:49.995Z"
+                    },
+                    "auth": {
+                      "nullValue": null
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": false
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "foobar"
+                        }]
+                      }
+                    },
+                    "fields": {
+                      "nullValue": null
+                    },
+                    "method": {
+                      "stringValue": "get"
+                    }
+                  }
+                }
+              },
+              "count": 2
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-09T15:45:50.125Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "writeFields": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "undefined": {
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-09T15:45:50.125Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "writeFields": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "mapValue": {
+                        "fields": {
+                          "data": {
+                            "mapValue": {
+                              "fields": {
+                                "birthday": {
+                                  "stringValue": "January 1"
+                                },
+                                "createdAt": {
+                                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                                }
+                              }
+                            }
+                          },
+                          "__name__": {
+                            "pathValue": {
+                              "segments": [{
+                                "simple": "databases"
+                              }, {
+                                "simple": "(default)"
+                              }, {
+                                "simple": "documents"
+                              }, {
+                                "simple": "users"
+                              }, {
+                                "simple": "alice"
+                              }]
+                            }
+                          },
+                          "id": {
+                            "stringValue": "alice"
+                          }
+                        }
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-09T15:45:50.158Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "nullValue": null
+                    },
+                    "writeFields": {
+                      "nullValue": null
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "mapValue": {
+                        "fields": {
+                          "data": {
+                            "mapValue": {
+                              "fields": {
+                                "birthday": {
+                                  "stringValue": "January 1"
+                                }
+                              }
+                            }
+                          },
+                          "__name__": {
+                            "pathValue": {
+                              "segments": [{
+                                "simple": "databases"
+                              }, {
+                                "simple": "(default)"
+                              }, {
+                                "simple": "documents"
+                              }, {
+                                "simple": "users"
+                              }, {
+                                "simple": "alice"
+                              }]
+                            }
+                          },
+                          "id": {
+                            "stringValue": "alice"
+                          }
+                        }
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }]
+          }]
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 15,
+        "column": 49,
+        "currentOffset": 420,
+        "endOffset": 431
+      },
+      "values": [{
+        "value": {
+          "timestampValue": "2023-06-09T15:45:49.995Z"
+        },
+        "count": 2
+      }, {
+        "value": {
+          "timestampValue": "2023-06-09T15:45:50.125Z"
+        },
+        "count": 2
+      }, {
+        "value": {
+          "timestampValue": "2023-06-09T15:45:50.158Z"
+        },
+        "count": 1
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 15,
+          "column": 49,
+          "currentOffset": 420,
+          "endOffset": 426
+        },
+        "values": [{
+          "value": {
+            "mapValue": {
+              "fields": {
+                "time": {
+                  "timestampValue": "2023-06-09T15:45:49.995Z"
+                },
+                "auth": {
+                  "nullValue": null
+                },
+                "headers": {
+                  "mapValue": {
+                  }
+                },
+                "inTransaction": {
+                  "boolValue": false
+                },
+                "path": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "foobar"
+                    }]
+                  }
+                },
+                "fields": {
+                  "nullValue": null
+                },
+                "method": {
+                  "stringValue": "get"
+                }
+              }
+            }
+          },
+          "count": 2
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "time": {
+                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                },
+                "auth": {
+                  "mapValue": {
+                    "fields": {
+                      "uid": {
+                        "stringValue": "alice"
+                      },
+                      "token": {
+                        "mapValue": {
+                          "fields": {
+                            "iss": {
+                              "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                            },
+                            "aud": {
+                              "stringValue": "brightpaw-d6fd6"
+                            },
+                            "iat": {
+                              "intValue": "0"
+                            },
+                            "exp": {
+                              "intValue": "3600"
+                            },
+                            "auth_time": {
+                              "intValue": "0"
+                            },
+                            "sub": {
+                              "stringValue": "alice"
+                            },
+                            "user_id": {
+                              "stringValue": "alice"
+                            },
+                            "firebase": {
+                              "mapValue": {
+                                "fields": {
+                                  "sign_in_provider": {
+                                    "stringValue": "custom"
+                                  },
+                                  "identities": {
+                                    "mapValue": {
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "headers": {
+                  "mapValue": {
+                  }
+                },
+                "inTransaction": {
+                  "boolValue": true
+                },
+                "path": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "alice"
+                    }]
+                  }
+                },
+                "transforms": {
+                  "listValue": {
+                    "values": [{
+                      "stringValue": "createdAt"
+                    }]
+                  }
+                },
+                "writeFields": {
+                  "listValue": {
+                    "values": [{
+                      "stringValue": "createdAt"
+                    }]
+                  }
+                },
+                "readFields": {
+                  "nullValue": null
+                },
+                "resource": {
+                  "undefined": {
+                  }
+                },
+                "method": {
+                  "stringValue": "create"
+                }
+              }
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "time": {
+                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                },
+                "auth": {
+                  "mapValue": {
+                    "fields": {
+                      "uid": {
+                        "stringValue": "alice"
+                      },
+                      "token": {
+                        "mapValue": {
+                          "fields": {
+                            "iss": {
+                              "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                            },
+                            "aud": {
+                              "stringValue": "brightpaw-d6fd6"
+                            },
+                            "iat": {
+                              "intValue": "0"
+                            },
+                            "exp": {
+                              "intValue": "3600"
+                            },
+                            "auth_time": {
+                              "intValue": "0"
+                            },
+                            "sub": {
+                              "stringValue": "alice"
+                            },
+                            "user_id": {
+                              "stringValue": "alice"
+                            },
+                            "firebase": {
+                              "mapValue": {
+                                "fields": {
+                                  "sign_in_provider": {
+                                    "stringValue": "custom"
+                                  },
+                                  "identities": {
+                                    "mapValue": {
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "headers": {
+                  "mapValue": {
+                  }
+                },
+                "inTransaction": {
+                  "boolValue": true
+                },
+                "path": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "alice"
+                    }]
+                  }
+                },
+                "transforms": {
+                  "listValue": {
+                    "values": [{
+                      "stringValue": "createdAt"
+                    }]
+                  }
+                },
+                "writeFields": {
+                  "listValue": {
+                    "values": [{
+                      "stringValue": "createdAt"
+                    }]
+                  }
+                },
+                "readFields": {
+                  "nullValue": null
+                },
+                "resource": {
+                  "mapValue": {
+                    "fields": {
+                      "data": {
+                        "mapValue": {
+                          "fields": {
+                            "birthday": {
+                              "stringValue": "January 1"
+                            },
+                            "createdAt": {
+                              "timestampValue": "2023-06-09T15:45:50.125Z"
+                            }
+                          }
+                        }
+                      },
+                      "__name__": {
+                        "pathValue": {
+                          "segments": [{
+                            "simple": "databases"
+                          }, {
+                            "simple": "(default)"
+                          }, {
+                            "simple": "documents"
+                          }, {
+                            "simple": "users"
+                          }, {
+                            "simple": "alice"
+                          }]
+                        }
+                      },
+                      "id": {
+                        "stringValue": "alice"
+                      }
+                    }
+                  }
+                },
+                "method": {
+                  "stringValue": "create"
+                }
+              }
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "time": {
+                  "timestampValue": "2023-06-09T15:45:50.158Z"
+                },
+                "auth": {
+                  "mapValue": {
+                    "fields": {
+                      "uid": {
+                        "stringValue": "alice"
+                      },
+                      "token": {
+                        "mapValue": {
+                          "fields": {
+                            "iss": {
+                              "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                            },
+                            "aud": {
+                              "stringValue": "brightpaw-d6fd6"
+                            },
+                            "iat": {
+                              "intValue": "0"
+                            },
+                            "exp": {
+                              "intValue": "3600"
+                            },
+                            "auth_time": {
+                              "intValue": "0"
+                            },
+                            "sub": {
+                              "stringValue": "alice"
+                            },
+                            "user_id": {
+                              "stringValue": "alice"
+                            },
+                            "firebase": {
+                              "mapValue": {
+                                "fields": {
+                                  "sign_in_provider": {
+                                    "stringValue": "custom"
+                                  },
+                                  "identities": {
+                                    "mapValue": {
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "headers": {
+                  "mapValue": {
+                  }
+                },
+                "inTransaction": {
+                  "boolValue": true
+                },
+                "path": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "alice"
+                    }]
+                  }
+                },
+                "transforms": {
+                  "nullValue": null
+                },
+                "writeFields": {
+                  "nullValue": null
+                },
+                "readFields": {
+                  "nullValue": null
+                },
+                "resource": {
+                  "mapValue": {
+                    "fields": {
+                      "data": {
+                        "mapValue": {
+                          "fields": {
+                            "birthday": {
+                              "stringValue": "January 1"
+                            }
+                          }
+                        }
+                      },
+                      "__name__": {
+                        "pathValue": {
+                          "segments": [{
+                            "simple": "databases"
+                          }, {
+                            "simple": "(default)"
+                          }, {
+                            "simple": "documents"
+                          }, {
+                            "simple": "users"
+                          }, {
+                            "simple": "alice"
+                          }]
+                        }
+                      },
+                      "id": {
+                        "stringValue": "alice"
+                      }
+                    }
+                  }
+                },
+                "method": {
+                  "stringValue": "create"
+                }
+              }
+            }
+          },
+          "count": 1
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 19,
+      "column": 7,
+      "currentOffset": 476,
+      "endOffset": 784
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 19,
+        "column": 18,
+        "currentOffset": 487,
+        "endOffset": 507
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 19,
+          "column": 18,
+          "currentOffset": 487,
+          "endOffset": 502
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 19,
+            "column": 18,
+            "currentOffset": 487,
+            "endOffset": 493
+          }
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 20,
+        "column": 7,
+        "currentOffset": 516,
+        "endOffset": 784
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 20,
+          "column": 21,
+          "currentOffset": 530,
+          "endOffset": 557
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 20,
+            "column": 21,
+            "currentOffset": 530,
+            "endOffset": 537
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 20,
+              "column": 21,
+              "currentOffset": 530,
+              "endOffset": 533
+            }
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 20,
+            "column": 33,
+            "currentOffset": 542,
+            "endOffset": 557
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 20,
+              "column": 33,
+              "currentOffset": 542,
+              "endOffset": 553
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 20,
+                "column": 33,
+                "currentOffset": 542,
+                "endOffset": 548
+              }
+            }]
+          }]
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 21,
+          "column": 7,
+          "currentOffset": 566,
+          "endOffset": 784
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 21,
+            "column": 19,
+            "currentOffset": 578,
+            "endOffset": 624
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 21,
+              "column": 19,
+              "currentOffset": 578,
+              "endOffset": 589
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 21,
+                "column": 19,
+                "currentOffset": 578,
+                "endOffset": 584
+              }
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 21,
+              "column": 35,
+              "currentOffset": 594,
+              "endOffset": 624
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 21,
+                "column": 35,
+                "currentOffset": 594,
+                "endOffset": 614
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 21,
+                  "column": 35,
+                  "currentOffset": 594,
+                  "endOffset": 609
+                },
+                "children": [{
+                  "sourcePosition": {
+                    "line": 21,
+                    "column": 35,
+                    "currentOffset": 594,
+                    "endOffset": 600
+                  }
+                }]
+              }]
+            }]
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 22,
+            "column": 7,
+            "currentOffset": 633,
+            "endOffset": 784
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 22,
+              "column": 31,
+              "currentOffset": 657,
+              "endOffset": 729
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 22,
+                "column": 31,
+                "currentOffset": 657,
+                "endOffset": 665
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 22,
+                  "column": 31,
+                  "currentOffset": 657,
+                  "endOffset": 660
+                }
+              }]
+            }, {
+              "sourcePosition": {
+                "line": 22,
+                "column": 50,
+                "currentOffset": 676,
+                "endOffset": 729
+              }
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 24,
+              "column": 14,
+              "currentOffset": 748,
+              "endOffset": 784
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 24,
+                "column": 14,
+                "currentOffset": 748,
+                "endOffset": 775
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 24,
+                  "column": 14,
+                  "currentOffset": 748,
+                  "endOffset": 754
+                }
+              }, {
+                "sourcePosition": {
+                  "line": 24,
+                  "column": 25,
+                  "currentOffset": 759,
+                  "endOffset": 775
+                }
+              }]
+            }, {
+              "sourcePosition": {
+                "line": 24,
+                "column": 46,
+                "currentOffset": 780,
+                "endOffset": 784
+              }
+            }]
+          }]
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 28,
+      "column": 7,
+      "currentOffset": 836,
+      "endOffset": 1169
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 28,
+        "column": 18,
+        "currentOffset": 847,
+        "endOffset": 867
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 28,
+          "column": 18,
+          "currentOffset": 847,
+          "endOffset": 862
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 28,
+            "column": 18,
+            "currentOffset": 847,
+            "endOffset": 853
+          }
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 29,
+        "column": 7,
+        "currentOffset": 876,
+        "endOffset": 1169
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 29,
+          "column": 31,
+          "currentOffset": 900,
+          "endOffset": 972
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 29,
+            "column": 31,
+            "currentOffset": 900,
+            "endOffset": 908
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 29,
+              "column": 31,
+              "currentOffset": 900,
+              "endOffset": 903
+            }
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 29,
+            "column": 50,
+            "currentOffset": 919,
+            "endOffset": 972
+          }
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 31,
+          "column": 7,
+          "currentOffset": 1045,
+          "endOffset": 1169
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 31,
+            "column": 28,
+            "currentOffset": 1066,
+            "endOffset": 1118
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 31,
+              "column": 28,
+              "currentOffset": 1066,
+              "endOffset": 1087
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 31,
+                "column": 28,
+                "currentOffset": 1066,
+                "endOffset": 1077
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 31,
+                  "column": 28,
+                  "currentOffset": 1066,
+                  "endOffset": 1069
+                }
+              }]
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 31,
+              "column": 54,
+              "currentOffset": 1092,
+              "endOffset": 1118
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 31,
+                "column": 54,
+                "currentOffset": 1092,
+                "endOffset": 1108
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 31,
+                  "column": 54,
+                  "currentOffset": 1092,
+                  "endOffset": 1103
+                },
+                "children": [{
+                  "sourcePosition": {
+                    "line": 31,
+                    "column": 54,
+                    "currentOffset": 1092,
+                    "endOffset": 1095
+                  }
+                }]
+              }]
+            }]
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 33,
+            "column": 14,
+            "currentOffset": 1135,
+            "endOffset": 1169
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 33,
+              "column": 14,
+              "currentOffset": 1135,
+              "endOffset": 1151
+            }
+          }, {
+            "sourcePosition": {
+              "line": 33,
+              "column": 35,
+              "currentOffset": 1156,
+              "endOffset": 1169
+            }
+          }]
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 5,
+      "column": 30,
+      "currentOffset": 146,
+      "endOffset": 169
+    },
+    "values": [{
+      "value": {
+        "undefined": {
+          "sourcePosition": {
+            "line": 11,
+            "column": 14,
+            "currentOffset": 314,
+            "endOffset": 320
+          },
+          "causeMessage": "Null value error."
+        }
+      },
+      "count": 2
+    }, {
+      "value": {
+        "undefined": {
+        }
+      },
+      "count": 1
+    }, {
+      "value": {
+        "boolValue": true
+      },
+      "count": 1
+    }, {
+      "value": {
+        "boolValue": false
+      },
+      "count": 1
+    }, {
+      "value": {
+        "undefined": {
+          "sourcePosition": {
+            "line": 15,
+            "column": 14,
+            "currentOffset": 385,
+            "endOffset": 391
+          },
+          "causeMessage": "Property createdAt is undefined on object."
+        }
+      },
+      "count": 1
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 5,
+        "column": 30,
+        "currentOffset": 146,
+        "endOffset": 159
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 11,
+              "column": 14,
+              "currentOffset": 314,
+              "endOffset": 320
+            },
+            "causeMessage": "Null value error."
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "boolValue": true
+        },
+        "count": 3
+      }, {
+        "value": {
+          "boolValue": false
+        },
+        "count": 1
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 5,
+          "column": 38,
+          "currentOffset": 154,
+          "endOffset": 159
+        },
+        "values": [{
+          "value": {
+            "stringValue": "foobar"
+          },
+          "count": 2
+        }, {
+          "value": {
+            "stringValue": "alice"
+          },
+          "count": 3
+        }, {
+          "value": {
+            "stringValue": "bob"
+          },
+          "count": 1
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 5,
+        "column": 49,
+        "currentOffset": 165,
+        "endOffset": 169
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 15,
+              "column": 14,
+              "currentOffset": 385,
+              "endOffset": 391
+            },
+            "causeMessage": "Property resource is undefined on object."
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "boolValue": true
+        },
+        "count": 1
+      }, {
+        "value": {
+        },
+        "count": 1
+      }, {
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 15,
+              "column": 14,
+              "currentOffset": 385,
+              "endOffset": 391
+            },
+            "causeMessage": "Property createdAt is undefined on object."
+          }
+        },
+        "count": 1
+      }]
+    }]
+  }]
+};
+
+const REPORT_LIMIT_SIZE = 15
+
+window.onload = function() {
+  if (data.rules.files.length == 1) {
+    document.body.appendChild(buildFormattedReport(data.report || [], data.rules.files[0].content))
+  } else {
+    document.body.appendChild(document.createTextNode('Only single-file rules supported. ' +
+    'If you encounter this please visit https://github.com/firebase/firebase-tools/issues'))
+  }
+};
+
+/**
+ * Builds the html block with span elements for rule visualization.
+ *
+ * @param expressionList The list of expression blocks.
+ * @param ruleString The full text of the rules with newlines and special characters escaped.
+ * @return A <pre> html element with <span></span> around expressions and subexpressions within
+ *     .write, .read, and .validate tokens so that they can be selected.
+ */
+function buildFormattedReport(expressionList, ruleString) {
+  const elements = Object.keys(expressionList).map((key) => {
+    return mapExpressionBlock(expressionList[key], ruleString)
+  })
+  const withText = interpolateTextNodes(
+    elements,
+    ruleString,
+    0,
+    ruleString.length
+  )
+  var preElement = document.createElement('pre')
+  withText.forEach((element) => preElement.appendChild(element.element))
+  return preElement
+}
+
+/**
+ * Traverses an expression block.
+ *
+ * Each expression needs to be wrapped in a span and so it's children need to be immediately
+ * resolved so they can be added to the element.
+ *
+ * @param expressionBlock The current recursive chunk of expression data.
+ * @param ruleString The full text of the rules with newlines and special characters escaped.
+ * @return A single object with at least the keys start, end, and element. Element is the span
+ *    element for that [sub]expression. The span element should have all it's children
+ *    already added.
+ */
+function mapExpressionBlock(expressionBlock, ruleString) {
+  const start = expressionBlock.sourcePosition.currentOffset
+  const end = expressionBlock.sourcePosition.endOffset + 1
+  const onlyChildSpans = (expressionBlock.children || []).map(
+    (child) => mapExpressionBlock(child, ruleString)
+  )
+  const allChildren = interpolateTextNodes(
+    onlyChildSpans,
+    ruleString,
+    start,
+    end,
+    true
+  )
+  var span = document.createElement('span')
+  allChildren.forEach((child) => {
+    span.appendChild(child.element)
+  })
+  span.classList.add('coverage-expr')
+  span.title = buildValueString(expressionBlock.values);
+  return {
+    element: span,
+    start: start,
+    end: end
+  }
+}
+
+/**
+ * The formatted report data has information about where subexpression are located. It does not,
+ * however, have information about text around these expressions. This function takes a formatted
+ * list of spans (representing expressions) and puts surrounding text into text elements and
+ * returns the list of all elements in that given text-area.
+ *
+ * @param objs the list of spans to have their bounds interpolated. Each element in the list should
+ *    formatted with the keys start, end, and element.
+ * @param ruleString The full text of the rules with newlines and special characters escaped.
+ * @param optStart An optional start index to start gathering text-elements from.
+ * @param optEnd An optional end index to finish gathering text-elements at.
+ * @param whether to remove newlines from the text values.
+ * @return An interpolated list with all indices from start to end of the ruleString being
+ *    included in either a span or a text element.
+ */
+function interpolateTextNodes(objs, ruleString, start = null, end = null, removeNewLines = false) {
+  // Arrays so null objects aren't appended (options)
+  const expressionStart = start !== null ? [{'end': start}] : []
+  const expressionEnd = end !== null ? [{'start': end}] : []
+  const sortedInnerBlocks = (objs || []).sort((a, b) => (a['start'] - b['start']))
+  const blocksWithBounds = [].concat(expressionStart, sortedInnerBlocks, expressionEnd)
+  const interpolatedBlocks = blocksWithBounds.reduce((allChildren, child, idx) => {
+    if (allChildren && allChildren.length) {
+      const lastEnd = allChildren[allChildren.length - 1]['end']
+      const thisStart = child['start']
+      // This is an array so that we don't append null objects
+      if (lastEnd < thisStart) {
+        const text = ruleString.substring(lastEnd, thisStart)
+        const textElement = [{
+          element: document.createTextNode(removeNewLines ? text.replace(/\n\s*/g,' ') : text),
+          'start': allChildren[allChildren.length - 1]['end'],
+          'end': child['start']
+        }]
+        return allChildren.concat(textElement, child)
+      }
+    }
+    return allChildren.concat(child)
+  }, [])
+  return interpolatedBlocks.filter(
+    (child) => child['start'] !== undefined && child['end'] !== undefined
+  )
+}
+
+/**
+ * Creates the mouse-over text for each span.
+ *
+ * @param values The array of value objects formatted as {value: **, count: **}.
+ * @return A single string for the mouse-over text.
+ */
+function buildValueString(values) {
+  if (!values || !values.length) {
+    return 'Expression never evaluated'
+  } else if (values.length >= REPORT_LIMIT_SIZE) {
+    const allCounts = values.reduce((acc, obj) => acc + obj.count, 0)
+    return `${values.length} distinct items returned over ${allCounts} times`
+  } else {
+    return values.map(({value, count}) => {
+      const allowedTypes = ['nullValue', 'boolValue', 'intValue', 'floatValue', 'stringValue',
+        'bytesValue', 'durationValue', 'timestampValue', 'latlngValue', 'pathValue']
+      const compressedTypes = ['mapValue', 'listValue', 'constraintValue']
+      const typeAllowed = allowedTypes.filter(type => value[type] !== undefined).length == 1
+      const typeCompressed = compressedTypes.filter(type => value[type] !== undefined).length >= 1
+      // Format is value = {returnType: returnValue}
+      // A returnType of undefined is an error. Unfortunately the field is called undefined.
+      if (value['undefined']) {
+        // Expression evaluated to error
+        return `Error '${value.undefined.causeMessage}' occurred ${count} time(s)`
+      } else if (typeCompressed) {
+        // These types are recursive and are hard to read
+        return `[object Object] returned ${count} time(s)`
+      } else if (typeAllowed) {
+        // The response is a simple literal
+        // Object.values is not ES2015
+        const realValue = Object.keys(value).map((key) => value[key])[0]
+        return `Value ${JSON.stringify(realValue)} returned ${count} time(s)`
+      } else if (Object.keys(value).length === 0) {
+        // Clause not evaluated because of short-circuit.
+        return `Expression short-circuited ${count} time(s)`
+      } else {
+        // For a properly formatted response each value should have one type.
+        console.error('Found invalid expression-return type.')
+      }
+    }).join('\n')
+  }
+}
+</script>
