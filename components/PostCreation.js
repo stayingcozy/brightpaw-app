@@ -2,7 +2,6 @@ import { db, auth } from '@/lib/firebase';
 
 import { useRouter } from 'next/router';
 import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
-import { useDocument } from 'react-firebase-hooks/firestore';
 
 export default function PostCreation({ date }) {
     // get user firebase id
