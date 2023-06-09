@@ -1,7 +1,7 @@
 import { db, auth } from '@/lib/firebase';
 
 import { useRouter } from 'next/router';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import { useDocument } from 'react-firebase-hooks/firestore';
 
 export default function PostCreation({ date }) {
@@ -15,7 +15,7 @@ export default function PostCreation({ date }) {
 
     // check if posts exist for user
     const postRef = doc(db,"users",`${uid}`,'posts',`${date}`);
-    const [postDoc] = useDocument(postRef);
+
 
     // Create a new post in firestore
     const createPost = async (date, uid) => {
@@ -31,11 +31,24 @@ export default function PostCreation({ date }) {
         updatedAt: serverTimestamp(),
         };
 
-        // await postRef.set(data); // send it to firebase v8
         await setDoc(postRef,data);
     }
 
-    // if post for the day does not exist create a new post
-    !postDoc?.exists && createPost(date, uid);
+    async function get_post(postRef, date, uid) {
+        // get post document
+        const postSnap =  await getDoc(postRef);
+        // console.log("Check if snap is true");
+        // console.log(postSnap.exists());
+
+        // if it doesn't exist create a new post
+        if (!postSnap.exists()) {
+            // console.log("Created Post");
+            createPost(date, uid);
+        }
+    }
+
+    // Check if post already exist for the day
+    get_post(postRef, date, uid);
+    
 }
 

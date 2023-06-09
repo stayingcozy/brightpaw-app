@@ -27,7 +27,7 @@ service cloud.firestore {
     function isValidUpdatedPost() {
       let post = request.resource.data;
       let hasRequiredFields = post.keys().hasAny(['content', 'createdAt', 'uid', 'updatedAt','username']);
-      // let noMetaFields = post.keys().hasOnly(['content']);
+      // let noMetaFields = post.keys().hasOnly(['content', 'updatedAt']);
       let isValidContent = post.content is string && post.content.size() < 10000;
 
       return hasRequiredFields && isValidContent;
