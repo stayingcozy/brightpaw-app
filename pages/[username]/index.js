@@ -25,6 +25,7 @@ import joystick from '@/components/Joystick';
 import { Joystick } from 'react-joystick-component';
 // import UploadRoboflow from '@/components/UploadRoboflow';
 import IntervalMetric from '@/components/IntervalMetric';
+import URLCheck from '@/components/UrlCheck';
 //
 
 export default function UserProfilePage(props) {
@@ -40,17 +41,19 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          {/* <ConnectBLE /> */}
-          {/* <Joystick /> */}
+          <URLCheck>
+            {/* <ConnectBLE /> */}
+            {/* <Joystick /> */}
 
-          <WebRTCpi setPlaying={setPlaying}/>
-          {/* <RemoteWebRTCTFCoco /> */}
-          {/* <VideoUploader setDownloadURL={setDownloadURL} />
-          <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
-          {/* <UploadRoboflow downloadURL={downloadURL} /> */}
-          {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
-          <PostCreation date={todaysDate} />
-          <PostManager date={todaysDate} />   
+            <WebRTCpi setPlaying={setPlaying}/>
+            {/* <RemoteWebRTCTFCoco /> */}
+            {/* <VideoUploader setDownloadURL={setDownloadURL} />
+            <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
+            {/* <UploadRoboflow downloadURL={downloadURL} /> */}
+            {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
+            <PostCreation date={todaysDate} />
+            <PostManager date={todaysDate} />   
+          </URLCheck>
         </AuthCheck>
         <SignOutButton />
     </main>
