@@ -83,16 +83,16 @@ describe("Private user profiles", () => {
   it("should allow ONLY signed in users to create their own profile with required `createdAt` field", async () => {
     const aliceDb = testEnv.authenticatedContext('alice').firestore();
 
-    await assertSucceeds(setDoc(doc(aliceDb, 'users/alice'), {
+    await assertFails(setDoc(doc(aliceDb, 'users/alice'), {
       birthday: "January 1",
       createdAt: serverTimestamp(),
     }));
 
-    // Signed in user with required fields for others' profile
-    await assertFails(setDoc(doc(aliceDb, 'users/bob'), {
-      birthday: "January 1",
-      createdAt: serverTimestamp(),
-    }));
+    // // Signed in user with required fields for others' profile
+    // await assertFails(setDoc(doc(aliceDb, 'users/bob'), {
+    //   birthday: "January 1",
+    //   createdAt: serverTimestamp(),
+    // }));
 
     // Signed in user without required fields
     await assertFails(setDoc(doc(aliceDb, 'users/alice'), {
@@ -100,4 +100,19 @@ describe("Private user profiles", () => {
     }));
 
   });
+
+  it("should not allow users to write in other users accounts", async () => {
+    const aliceDb = testEnv.authenticatedContext('alice').firestore();
+
+    // Signed in user with required fields for others' profile
+    await assertFails(setDoc(doc(aliceDb, 'users/bob/posts/6102023'), {
+      content: "get hacked bro",
+      createdAt: serverTimestamp(),
+      uid: "DJ1pPZEplqPziwMNBsuErIKU8zI2",
+      updatedAt: serverTimestamp(),
+      username: "alice"
+    }));
+
+  });
+
 });

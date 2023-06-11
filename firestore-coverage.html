@@ -20,24 +20,24 @@
 const data = {
   "rules": {
     "files": [{
-      "content": "rules_version \u003d \u00272\u0027;\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{userId} {\n      allow read, create: if isOwner(userId) \u0026\u0026 isNow();\n      // allow create: if isValidPost();\n      // allow update: if isValidUpdatedPost();\n    }\n\n    function isOwner(userId) {\n      return request.auth.uid \u003d\u003d userId;\n    }\n\n    function isNow() {\n      return request.resource.data.createdAt \u003d\u003d request.time;\n    }\n\n    function isValidPost() {\n      let post \u003d request.resource.data;\n      let isOwner \u003d post.uid \u003d\u003d request.auth.uid;\n      let isNow \u003d request.time \u003d\u003d request.resource.data.createdAt;\n      let hasRequiredFields \u003d post.keys().hasAll([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n\n      return isOwner \u0026\u0026 hasRequiredFields \u0026\u0026 isNow;\n    }\n\n    function isValidUpdatedPost() {\n      let post \u003d request.resource.data;\n      let hasRequiredFields \u003d post.keys().hasAny([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n      // let noMetaFields \u003d post.keys().hasOnly([\u0027content\u0027]);\n      let isValidContent \u003d post.content is string \u0026\u0026 post.content.size() \u003c 10000;\n\n      return hasRequiredFields \u0026\u0026 isValidContent;\n    }\n  }\n}"
+      "content": "rules_version \u003d \u00272\u0027;\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    allow read: if request.auth.uid \u003d\u003d request.resource.auth.uid;\n\n\t\tmatch /users/{userId} {\n\t\t\tallow read: if belongsTo(userId);\n      allow update: if belongsTo(userId) \u0026\u0026 isValidUserData();\n\t\t\tallow create: if belongsTo(userId) \u0026\u0026 hasValidTimestamp() \u0026\u0026 isValidUserData();\n\t\t}\n\n    match /users/{userId}/calls/{docs \u003d ** } {\n      allow read, update: if belongsTo(userId);\n\t\t\tallow create: if belongsTo(userId) \u0026\u0026 hasValidTimestamp();\n    }\n\n    match /users/{userId}/posts/{docs \u003d ** } {\n      allow read: if belongsTo(userId);\n\t\t\tallow create: if belongsTo(userId) \u0026\u0026 isValidPost();\n      allow update: if belongsTo(userId) \u0026\u0026 isValidUpdatedPost();\n    }\n\n\t\tfunction belongsTo(userId) {\n\t\t\treturn request.auth.uid \u003d\u003d userId;\n\t\t}\n\t\tfunction hasValidTimestamp() {\n\t\t\treturn request.time \u003d\u003d request.resource.data.createdAt;\n\t\t}\n\n    function isValidUserData() {\n      let post \u003d request.resource.data;\n      let hasRequiredFields \u003d post.keys().hasAll([\u0027displayName\u0027, \u0027photoURL\u0027, \u0027username\u0027]);\n\n      return hasRequiredFields;\n    }\n\n    function isValidPost() {\n      let post \u003d request.resource.data;\n      let isOwner \u003d post.uid \u003d\u003d request.auth.uid;\n      let isNow \u003d request.time \u003d\u003d request.resource.data.createdAt;\n      let hasRequiredFields \u003d post.keys().hasAll([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n\n      return isOwner \u0026\u0026 hasRequiredFields \u0026\u0026 isNow;\n    }\n\n    function isValidUpdatedPost() {\n      let post \u003d request.resource.data;\n      let hasRequiredFields \u003d post.keys().hasAny([\u0027content\u0027, \u0027createdAt\u0027, \u0027uid\u0027, \u0027updatedAt\u0027,\u0027username\u0027]);\n      // let noMetaFields \u003d post.keys().hasOnly([\u0027content\u0027, \u0027updatedAt\u0027]);\n      let isValidContent \u003d post.content is string \u0026\u0026 post.content.size() \u003c 10000;\n\n      return hasRequiredFields \u0026\u0026 isValidContent; // \u0026\u0026 noMetaFields;\n    }\n\n\t}\n}"
     }]
   },
   "report": [{
     "sourcePosition": {
-      "line": 11,
-      "column": 14,
-      "currentOffset": 314,
-      "endOffset": 339
+      "line": 25,
+      "column": 11,
+      "currentOffset": 792,
+      "endOffset": 817
     },
     "values": [{
       "value": {
         "undefined": {
           "sourcePosition": {
-            "line": 11,
-            "column": 14,
-            "currentOffset": 314,
-            "endOffset": 320
+            "line": 25,
+            "column": 11,
+            "currentOffset": 792,
+            "endOffset": 798
           },
           "causeMessage": "Null value error."
         }
@@ -47,28 +47,28 @@ const data = {
       "value": {
         "boolValue": true
       },
-      "count": 3
+      "count": 5
     }, {
       "value": {
         "boolValue": false
       },
-      "count": 1
+      "count": 2
     }],
     "children": [{
       "sourcePosition": {
-        "line": 11,
-        "column": 14,
-        "currentOffset": 314,
-        "endOffset": 329
+        "line": 25,
+        "column": 11,
+        "currentOffset": 792,
+        "endOffset": 807
       },
       "values": [{
         "value": {
           "undefined": {
             "sourcePosition": {
-              "line": 11,
-              "column": 14,
-              "currentOffset": 314,
-              "endOffset": 320
+              "line": 25,
+              "column": 11,
+              "currentOffset": 792,
+              "endOffset": 798
             },
             "causeMessage": "Null value error."
           }
@@ -78,14 +78,14 @@ const data = {
         "value": {
           "stringValue": "alice"
         },
-        "count": 4
+        "count": 7
       }],
       "children": [{
         "sourcePosition": {
-          "line": 11,
-          "column": 14,
-          "currentOffset": 314,
-          "endOffset": 325
+          "line": 25,
+          "column": 11,
+          "currentOffset": 792,
+          "endOffset": 803
         },
         "values": [{
           "value": {
@@ -142,21 +142,21 @@ const data = {
               }
             }
           },
-          "count": 4
+          "count": 7
         }],
         "children": [{
           "sourcePosition": {
-            "line": 11,
-            "column": 14,
-            "currentOffset": 314,
-            "endOffset": 320
+            "line": 25,
+            "column": 11,
+            "currentOffset": 792,
+            "endOffset": 798
           },
           "values": [{
             "value": {
               "mapValue": {
                 "fields": {
                   "time": {
-                    "timestampValue": "2023-06-09T15:45:49.995Z"
+                    "timestampValue": "2023-06-11T00:11:01.260Z"
                   },
                   "auth": {
                     "nullValue": null
@@ -198,7 +198,7 @@ const data = {
               "mapValue": {
                 "fields": {
                   "time": {
-                    "timestampValue": "2023-06-09T15:45:50.125Z"
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
                   },
                   "auth": {
                     "mapValue": {
@@ -304,7 +304,113 @@ const data = {
               "mapValue": {
                 "fields": {
                   "time": {
-                    "timestampValue": "2023-06-09T15:45:50.125Z"
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "update"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
                   },
                   "auth": {
                     "mapValue": {
@@ -404,7 +510,7 @@ const data = {
                                 "stringValue": "January 1"
                               },
                               "createdAt": {
-                                "timestampValue": "2023-06-09T15:45:50.125Z"
+                                "timestampValue": "2023-06-11T00:11:01.477Z"
                               }
                             }
                           }
@@ -442,113 +548,7 @@ const data = {
               "mapValue": {
                 "fields": {
                   "time": {
-                    "timestampValue": "2023-06-09T15:45:50.140Z"
-                  },
-                  "auth": {
-                    "mapValue": {
-                      "fields": {
-                        "uid": {
-                          "stringValue": "alice"
-                        },
-                        "token": {
-                          "mapValue": {
-                            "fields": {
-                              "iss": {
-                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
-                              },
-                              "aud": {
-                                "stringValue": "brightpaw-d6fd6"
-                              },
-                              "iat": {
-                                "intValue": "0"
-                              },
-                              "exp": {
-                                "intValue": "3600"
-                              },
-                              "auth_time": {
-                                "intValue": "0"
-                              },
-                              "sub": {
-                                "stringValue": "alice"
-                              },
-                              "user_id": {
-                                "stringValue": "alice"
-                              },
-                              "firebase": {
-                                "mapValue": {
-                                  "fields": {
-                                    "sign_in_provider": {
-                                      "stringValue": "custom"
-                                    },
-                                    "identities": {
-                                      "mapValue": {
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "headers": {
-                    "mapValue": {
-                    }
-                  },
-                  "inTransaction": {
-                    "boolValue": true
-                  },
-                  "path": {
-                    "pathValue": {
-                      "segments": [{
-                        "simple": "databases"
-                      }, {
-                        "simple": "(default)"
-                      }, {
-                        "simple": "documents"
-                      }, {
-                        "simple": "users"
-                      }, {
-                        "simple": "bob"
-                      }]
-                    }
-                  },
-                  "transforms": {
-                    "listValue": {
-                      "values": [{
-                        "stringValue": "createdAt"
-                      }]
-                    }
-                  },
-                  "writeFields": {
-                    "listValue": {
-                      "values": [{
-                        "stringValue": "createdAt"
-                      }]
-                    }
-                  },
-                  "readFields": {
-                    "nullValue": null
-                  },
-                  "resource": {
-                    "undefined": {
-                    }
-                  },
-                  "method": {
-                    "stringValue": "create"
-                  }
-                }
-              }
-            },
-            "count": 1
-          }, {
-            "value": {
-              "mapValue": {
-                "fields": {
-                  "time": {
-                    "timestampValue": "2023-06-09T15:45:50.158Z"
+                    "timestampValue": "2023-06-11T00:11:01.526Z"
                   },
                   "auth": {
                     "mapValue": {
@@ -670,15 +670,370 @@ const data = {
               }
             },
             "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.526Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "nullValue": null
+                  },
+                  "writeFields": {
+                    "nullValue": null
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "update"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.629Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "bob"
+                      }, {
+                        "simple": "posts"
+                      }, {
+                        "simple": "6102023"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }, {
+                        "stringValue": "updatedAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }, {
+                        "stringValue": "updatedAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.629Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "bob"
+                      }, {
+                        "simple": "posts"
+                      }, {
+                        "simple": "6102023"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }, {
+                        "stringValue": "updatedAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }, {
+                        "stringValue": "updatedAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "update"
+                  }
+                }
+              }
+            },
+            "count": 1
           }]
         }]
       }]
     }, {
       "sourcePosition": {
-        "line": 11,
-        "column": 34,
-        "currentOffset": 334,
-        "endOffset": 339
+        "line": 25,
+        "column": 31,
+        "currentOffset": 812,
+        "endOffset": 817
       },
       "values": [{
         "value": {
@@ -689,35 +1044,22 @@ const data = {
         "value": {
           "stringValue": "alice"
         },
-        "count": 3
+        "count": 5
       }, {
         "value": {
           "stringValue": "bob"
         },
-        "count": 1
+        "count": 2
       }]
     }]
   }, {
     "sourcePosition": {
-      "line": 15,
-      "column": 14,
-      "currentOffset": 385,
-      "endOffset": 431
+      "line": 28,
+      "column": 11,
+      "currentOffset": 867,
+      "endOffset": 913
     },
     "values": [{
-      "value": {
-        "undefined": {
-          "sourcePosition": {
-            "line": 15,
-            "column": 14,
-            "currentOffset": 385,
-            "endOffset": 391
-          },
-          "causeMessage": "Property resource is undefined on object."
-        }
-      },
-      "count": 2
-    }, {
       "value": {
         "undefined": {
         }
@@ -732,10 +1074,10 @@ const data = {
       "value": {
         "undefined": {
           "sourcePosition": {
-            "line": 15,
-            "column": 14,
-            "currentOffset": 385,
-            "endOffset": 391
+            "line": 28,
+            "column": 27,
+            "currentOffset": 883,
+            "endOffset": 889
           },
           "causeMessage": "Property createdAt is undefined on object."
         }
@@ -744,703 +1086,35 @@ const data = {
     }],
     "children": [{
       "sourcePosition": {
-        "line": 15,
-        "column": 14,
-        "currentOffset": 385,
-        "endOffset": 415
+        "line": 28,
+        "column": 11,
+        "currentOffset": 867,
+        "endOffset": 878
       },
       "values": [{
         "value": {
-          "undefined": {
-            "sourcePosition": {
-              "line": 15,
-              "column": 14,
-              "currentOffset": 385,
-              "endOffset": 391
-            },
-            "causeMessage": "Property resource is undefined on object."
-          }
+          "timestampValue": "2023-06-11T00:11:01.477Z"
         },
         "count": 2
       }, {
         "value": {
-          "undefined": {
-          }
-        },
-        "count": 1
-      }, {
-        "value": {
-          "timestampValue": "2023-06-09T15:45:50.125Z"
-        },
-        "count": 1
-      }, {
-        "value": {
-          "undefined": {
-            "sourcePosition": {
-              "line": 15,
-              "column": 14,
-              "currentOffset": 385,
-              "endOffset": 391
-            },
-            "causeMessage": "Property createdAt is undefined on object."
-          }
+          "timestampValue": "2023-06-11T00:11:01.526Z"
         },
         "count": 1
       }],
       "children": [{
         "sourcePosition": {
-          "line": 15,
-          "column": 14,
-          "currentOffset": 385,
-          "endOffset": 405
-        },
-        "values": [{
-          "value": {
-            "undefined": {
-              "sourcePosition": {
-                "line": 15,
-                "column": 14,
-                "currentOffset": 385,
-                "endOffset": 391
-              },
-              "causeMessage": "Property resource is undefined on object."
-            }
-          },
-          "count": 2
-        }, {
-          "value": {
-            "undefined": {
-            }
-          },
-          "count": 1
-        }, {
-          "value": {
-            "mapValue": {
-              "fields": {
-                "birthday": {
-                  "stringValue": "January 1"
-                },
-                "createdAt": {
-                  "timestampValue": "2023-06-09T15:45:50.125Z"
-                }
-              }
-            }
-          },
-          "count": 1
-        }, {
-          "value": {
-            "mapValue": {
-              "fields": {
-                "birthday": {
-                  "stringValue": "January 1"
-                }
-              }
-            }
-          },
-          "count": 1
-        }],
-        "children": [{
-          "sourcePosition": {
-            "line": 15,
-            "column": 14,
-            "currentOffset": 385,
-            "endOffset": 400
-          },
-          "values": [{
-            "value": {
-              "undefined": {
-                "sourcePosition": {
-                  "line": 15,
-                  "column": 14,
-                  "currentOffset": 385,
-                  "endOffset": 391
-                },
-                "causeMessage": "Property resource is undefined on object."
-              }
-            },
-            "count": 2
-          }, {
-            "value": {
-              "undefined": {
-              }
-            },
-            "count": 1
-          }, {
-            "value": {
-              "mapValue": {
-                "fields": {
-                  "data": {
-                    "mapValue": {
-                      "fields": {
-                        "birthday": {
-                          "stringValue": "January 1"
-                        },
-                        "createdAt": {
-                          "timestampValue": "2023-06-09T15:45:50.125Z"
-                        }
-                      }
-                    }
-                  },
-                  "__name__": {
-                    "pathValue": {
-                      "segments": [{
-                        "simple": "databases"
-                      }, {
-                        "simple": "(default)"
-                      }, {
-                        "simple": "documents"
-                      }, {
-                        "simple": "users"
-                      }, {
-                        "simple": "alice"
-                      }]
-                    }
-                  },
-                  "id": {
-                    "stringValue": "alice"
-                  }
-                }
-              }
-            },
-            "count": 1
-          }, {
-            "value": {
-              "mapValue": {
-                "fields": {
-                  "data": {
-                    "mapValue": {
-                      "fields": {
-                        "birthday": {
-                          "stringValue": "January 1"
-                        }
-                      }
-                    }
-                  },
-                  "__name__": {
-                    "pathValue": {
-                      "segments": [{
-                        "simple": "databases"
-                      }, {
-                        "simple": "(default)"
-                      }, {
-                        "simple": "documents"
-                      }, {
-                        "simple": "users"
-                      }, {
-                        "simple": "alice"
-                      }]
-                    }
-                  },
-                  "id": {
-                    "stringValue": "alice"
-                  }
-                }
-              }
-            },
-            "count": 1
-          }],
-          "children": [{
-            "sourcePosition": {
-              "line": 15,
-              "column": 14,
-              "currentOffset": 385,
-              "endOffset": 391
-            },
-            "values": [{
-              "value": {
-                "mapValue": {
-                  "fields": {
-                    "time": {
-                      "timestampValue": "2023-06-09T15:45:49.995Z"
-                    },
-                    "auth": {
-                      "nullValue": null
-                    },
-                    "headers": {
-                      "mapValue": {
-                      }
-                    },
-                    "inTransaction": {
-                      "boolValue": false
-                    },
-                    "path": {
-                      "pathValue": {
-                        "segments": [{
-                          "simple": "databases"
-                        }, {
-                          "simple": "(default)"
-                        }, {
-                          "simple": "documents"
-                        }, {
-                          "simple": "users"
-                        }, {
-                          "simple": "foobar"
-                        }]
-                      }
-                    },
-                    "fields": {
-                      "nullValue": null
-                    },
-                    "method": {
-                      "stringValue": "get"
-                    }
-                  }
-                }
-              },
-              "count": 2
-            }, {
-              "value": {
-                "mapValue": {
-                  "fields": {
-                    "time": {
-                      "timestampValue": "2023-06-09T15:45:50.125Z"
-                    },
-                    "auth": {
-                      "mapValue": {
-                        "fields": {
-                          "uid": {
-                            "stringValue": "alice"
-                          },
-                          "token": {
-                            "mapValue": {
-                              "fields": {
-                                "iss": {
-                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
-                                },
-                                "aud": {
-                                  "stringValue": "brightpaw-d6fd6"
-                                },
-                                "iat": {
-                                  "intValue": "0"
-                                },
-                                "exp": {
-                                  "intValue": "3600"
-                                },
-                                "auth_time": {
-                                  "intValue": "0"
-                                },
-                                "sub": {
-                                  "stringValue": "alice"
-                                },
-                                "user_id": {
-                                  "stringValue": "alice"
-                                },
-                                "firebase": {
-                                  "mapValue": {
-                                    "fields": {
-                                      "sign_in_provider": {
-                                        "stringValue": "custom"
-                                      },
-                                      "identities": {
-                                        "mapValue": {
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "headers": {
-                      "mapValue": {
-                      }
-                    },
-                    "inTransaction": {
-                      "boolValue": true
-                    },
-                    "path": {
-                      "pathValue": {
-                        "segments": [{
-                          "simple": "databases"
-                        }, {
-                          "simple": "(default)"
-                        }, {
-                          "simple": "documents"
-                        }, {
-                          "simple": "users"
-                        }, {
-                          "simple": "alice"
-                        }]
-                      }
-                    },
-                    "transforms": {
-                      "listValue": {
-                        "values": [{
-                          "stringValue": "createdAt"
-                        }]
-                      }
-                    },
-                    "writeFields": {
-                      "listValue": {
-                        "values": [{
-                          "stringValue": "createdAt"
-                        }]
-                      }
-                    },
-                    "readFields": {
-                      "nullValue": null
-                    },
-                    "resource": {
-                      "undefined": {
-                      }
-                    },
-                    "method": {
-                      "stringValue": "create"
-                    }
-                  }
-                }
-              },
-              "count": 1
-            }, {
-              "value": {
-                "mapValue": {
-                  "fields": {
-                    "time": {
-                      "timestampValue": "2023-06-09T15:45:50.125Z"
-                    },
-                    "auth": {
-                      "mapValue": {
-                        "fields": {
-                          "uid": {
-                            "stringValue": "alice"
-                          },
-                          "token": {
-                            "mapValue": {
-                              "fields": {
-                                "iss": {
-                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
-                                },
-                                "aud": {
-                                  "stringValue": "brightpaw-d6fd6"
-                                },
-                                "iat": {
-                                  "intValue": "0"
-                                },
-                                "exp": {
-                                  "intValue": "3600"
-                                },
-                                "auth_time": {
-                                  "intValue": "0"
-                                },
-                                "sub": {
-                                  "stringValue": "alice"
-                                },
-                                "user_id": {
-                                  "stringValue": "alice"
-                                },
-                                "firebase": {
-                                  "mapValue": {
-                                    "fields": {
-                                      "sign_in_provider": {
-                                        "stringValue": "custom"
-                                      },
-                                      "identities": {
-                                        "mapValue": {
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "headers": {
-                      "mapValue": {
-                      }
-                    },
-                    "inTransaction": {
-                      "boolValue": true
-                    },
-                    "path": {
-                      "pathValue": {
-                        "segments": [{
-                          "simple": "databases"
-                        }, {
-                          "simple": "(default)"
-                        }, {
-                          "simple": "documents"
-                        }, {
-                          "simple": "users"
-                        }, {
-                          "simple": "alice"
-                        }]
-                      }
-                    },
-                    "transforms": {
-                      "listValue": {
-                        "values": [{
-                          "stringValue": "createdAt"
-                        }]
-                      }
-                    },
-                    "writeFields": {
-                      "listValue": {
-                        "values": [{
-                          "stringValue": "createdAt"
-                        }]
-                      }
-                    },
-                    "readFields": {
-                      "nullValue": null
-                    },
-                    "resource": {
-                      "mapValue": {
-                        "fields": {
-                          "data": {
-                            "mapValue": {
-                              "fields": {
-                                "birthday": {
-                                  "stringValue": "January 1"
-                                },
-                                "createdAt": {
-                                  "timestampValue": "2023-06-09T15:45:50.125Z"
-                                }
-                              }
-                            }
-                          },
-                          "__name__": {
-                            "pathValue": {
-                              "segments": [{
-                                "simple": "databases"
-                              }, {
-                                "simple": "(default)"
-                              }, {
-                                "simple": "documents"
-                              }, {
-                                "simple": "users"
-                              }, {
-                                "simple": "alice"
-                              }]
-                            }
-                          },
-                          "id": {
-                            "stringValue": "alice"
-                          }
-                        }
-                      }
-                    },
-                    "method": {
-                      "stringValue": "create"
-                    }
-                  }
-                }
-              },
-              "count": 1
-            }, {
-              "value": {
-                "mapValue": {
-                  "fields": {
-                    "time": {
-                      "timestampValue": "2023-06-09T15:45:50.158Z"
-                    },
-                    "auth": {
-                      "mapValue": {
-                        "fields": {
-                          "uid": {
-                            "stringValue": "alice"
-                          },
-                          "token": {
-                            "mapValue": {
-                              "fields": {
-                                "iss": {
-                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
-                                },
-                                "aud": {
-                                  "stringValue": "brightpaw-d6fd6"
-                                },
-                                "iat": {
-                                  "intValue": "0"
-                                },
-                                "exp": {
-                                  "intValue": "3600"
-                                },
-                                "auth_time": {
-                                  "intValue": "0"
-                                },
-                                "sub": {
-                                  "stringValue": "alice"
-                                },
-                                "user_id": {
-                                  "stringValue": "alice"
-                                },
-                                "firebase": {
-                                  "mapValue": {
-                                    "fields": {
-                                      "sign_in_provider": {
-                                        "stringValue": "custom"
-                                      },
-                                      "identities": {
-                                        "mapValue": {
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "headers": {
-                      "mapValue": {
-                      }
-                    },
-                    "inTransaction": {
-                      "boolValue": true
-                    },
-                    "path": {
-                      "pathValue": {
-                        "segments": [{
-                          "simple": "databases"
-                        }, {
-                          "simple": "(default)"
-                        }, {
-                          "simple": "documents"
-                        }, {
-                          "simple": "users"
-                        }, {
-                          "simple": "alice"
-                        }]
-                      }
-                    },
-                    "transforms": {
-                      "nullValue": null
-                    },
-                    "writeFields": {
-                      "nullValue": null
-                    },
-                    "readFields": {
-                      "nullValue": null
-                    },
-                    "resource": {
-                      "mapValue": {
-                        "fields": {
-                          "data": {
-                            "mapValue": {
-                              "fields": {
-                                "birthday": {
-                                  "stringValue": "January 1"
-                                }
-                              }
-                            }
-                          },
-                          "__name__": {
-                            "pathValue": {
-                              "segments": [{
-                                "simple": "databases"
-                              }, {
-                                "simple": "(default)"
-                              }, {
-                                "simple": "documents"
-                              }, {
-                                "simple": "users"
-                              }, {
-                                "simple": "alice"
-                              }]
-                            }
-                          },
-                          "id": {
-                            "stringValue": "alice"
-                          }
-                        }
-                      }
-                    },
-                    "method": {
-                      "stringValue": "create"
-                    }
-                  }
-                }
-              },
-              "count": 1
-            }]
-          }]
-        }]
-      }]
-    }, {
-      "sourcePosition": {
-        "line": 15,
-        "column": 49,
-        "currentOffset": 420,
-        "endOffset": 431
-      },
-      "values": [{
-        "value": {
-          "timestampValue": "2023-06-09T15:45:49.995Z"
-        },
-        "count": 2
-      }, {
-        "value": {
-          "timestampValue": "2023-06-09T15:45:50.125Z"
-        },
-        "count": 2
-      }, {
-        "value": {
-          "timestampValue": "2023-06-09T15:45:50.158Z"
-        },
-        "count": 1
-      }],
-      "children": [{
-        "sourcePosition": {
-          "line": 15,
-          "column": 49,
-          "currentOffset": 420,
-          "endOffset": 426
+          "line": 28,
+          "column": 11,
+          "currentOffset": 867,
+          "endOffset": 873
         },
         "values": [{
           "value": {
             "mapValue": {
               "fields": {
                 "time": {
-                  "timestampValue": "2023-06-09T15:45:49.995Z"
-                },
-                "auth": {
-                  "nullValue": null
-                },
-                "headers": {
-                  "mapValue": {
-                  }
-                },
-                "inTransaction": {
-                  "boolValue": false
-                },
-                "path": {
-                  "pathValue": {
-                    "segments": [{
-                      "simple": "databases"
-                    }, {
-                      "simple": "(default)"
-                    }, {
-                      "simple": "documents"
-                    }, {
-                      "simple": "users"
-                    }, {
-                      "simple": "foobar"
-                    }]
-                  }
-                },
-                "fields": {
-                  "nullValue": null
-                },
-                "method": {
-                  "stringValue": "get"
-                }
-              }
-            }
-          },
-          "count": 2
-        }, {
-          "value": {
-            "mapValue": {
-              "fields": {
-                "time": {
-                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                  "timestampValue": "2023-06-11T00:11:01.477Z"
                 },
                 "auth": {
                   "mapValue": {
@@ -1546,7 +1220,7 @@ const data = {
             "mapValue": {
               "fields": {
                 "time": {
-                  "timestampValue": "2023-06-09T15:45:50.125Z"
+                  "timestampValue": "2023-06-11T00:11:01.477Z"
                 },
                 "auth": {
                   "mapValue": {
@@ -1646,7 +1320,7 @@ const data = {
                               "stringValue": "January 1"
                             },
                             "createdAt": {
-                              "timestampValue": "2023-06-09T15:45:50.125Z"
+                              "timestampValue": "2023-06-11T00:11:01.477Z"
                             }
                           }
                         }
@@ -1684,7 +1358,7 @@ const data = {
             "mapValue": {
               "fields": {
                 "time": {
-                  "timestampValue": "2023-06-09T15:45:50.158Z"
+                  "timestampValue": "2023-06-11T00:11:01.526Z"
                 },
                 "auth": {
                   "mapValue": {
@@ -1808,419 +1482,1890 @@ const data = {
           "count": 1
         }]
       }]
-    }]
-  }, {
-    "sourcePosition": {
-      "line": 19,
-      "column": 7,
-      "currentOffset": 476,
-      "endOffset": 784
-    },
-    "children": [{
-      "sourcePosition": {
-        "line": 19,
-        "column": 18,
-        "currentOffset": 487,
-        "endOffset": 507
-      },
-      "children": [{
-        "sourcePosition": {
-          "line": 19,
-          "column": 18,
-          "currentOffset": 487,
-          "endOffset": 502
-        },
-        "children": [{
-          "sourcePosition": {
-            "line": 19,
-            "column": 18,
-            "currentOffset": 487,
-            "endOffset": 493
-          }
-        }]
-      }]
     }, {
       "sourcePosition": {
-        "line": 20,
-        "column": 7,
-        "currentOffset": 516,
-        "endOffset": 784
-      },
-      "children": [{
-        "sourcePosition": {
-          "line": 20,
-          "column": 21,
-          "currentOffset": 530,
-          "endOffset": 557
-        },
-        "children": [{
-          "sourcePosition": {
-            "line": 20,
-            "column": 21,
-            "currentOffset": 530,
-            "endOffset": 537
-          },
-          "children": [{
-            "sourcePosition": {
-              "line": 20,
-              "column": 21,
-              "currentOffset": 530,
-              "endOffset": 533
-            }
-          }]
-        }, {
-          "sourcePosition": {
-            "line": 20,
-            "column": 33,
-            "currentOffset": 542,
-            "endOffset": 557
-          },
-          "children": [{
-            "sourcePosition": {
-              "line": 20,
-              "column": 33,
-              "currentOffset": 542,
-              "endOffset": 553
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 20,
-                "column": 33,
-                "currentOffset": 542,
-                "endOffset": 548
-              }
-            }]
-          }]
-        }]
-      }, {
-        "sourcePosition": {
-          "line": 21,
-          "column": 7,
-          "currentOffset": 566,
-          "endOffset": 784
-        },
-        "children": [{
-          "sourcePosition": {
-            "line": 21,
-            "column": 19,
-            "currentOffset": 578,
-            "endOffset": 624
-          },
-          "children": [{
-            "sourcePosition": {
-              "line": 21,
-              "column": 19,
-              "currentOffset": 578,
-              "endOffset": 589
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 21,
-                "column": 19,
-                "currentOffset": 578,
-                "endOffset": 584
-              }
-            }]
-          }, {
-            "sourcePosition": {
-              "line": 21,
-              "column": 35,
-              "currentOffset": 594,
-              "endOffset": 624
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 21,
-                "column": 35,
-                "currentOffset": 594,
-                "endOffset": 614
-              },
-              "children": [{
-                "sourcePosition": {
-                  "line": 21,
-                  "column": 35,
-                  "currentOffset": 594,
-                  "endOffset": 609
-                },
-                "children": [{
-                  "sourcePosition": {
-                    "line": 21,
-                    "column": 35,
-                    "currentOffset": 594,
-                    "endOffset": 600
-                  }
-                }]
-              }]
-            }]
-          }]
-        }, {
-          "sourcePosition": {
-            "line": 22,
-            "column": 7,
-            "currentOffset": 633,
-            "endOffset": 784
-          },
-          "children": [{
-            "sourcePosition": {
-              "line": 22,
-              "column": 31,
-              "currentOffset": 657,
-              "endOffset": 729
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 22,
-                "column": 31,
-                "currentOffset": 657,
-                "endOffset": 665
-              },
-              "children": [{
-                "sourcePosition": {
-                  "line": 22,
-                  "column": 31,
-                  "currentOffset": 657,
-                  "endOffset": 660
-                }
-              }]
-            }, {
-              "sourcePosition": {
-                "line": 22,
-                "column": 50,
-                "currentOffset": 676,
-                "endOffset": 729
-              }
-            }]
-          }, {
-            "sourcePosition": {
-              "line": 24,
-              "column": 14,
-              "currentOffset": 748,
-              "endOffset": 784
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 24,
-                "column": 14,
-                "currentOffset": 748,
-                "endOffset": 775
-              },
-              "children": [{
-                "sourcePosition": {
-                  "line": 24,
-                  "column": 14,
-                  "currentOffset": 748,
-                  "endOffset": 754
-                }
-              }, {
-                "sourcePosition": {
-                  "line": 24,
-                  "column": 25,
-                  "currentOffset": 759,
-                  "endOffset": 775
-                }
-              }]
-            }, {
-              "sourcePosition": {
-                "line": 24,
-                "column": 46,
-                "currentOffset": 780,
-                "endOffset": 784
-              }
-            }]
-          }]
-        }]
-      }]
-    }]
-  }, {
-    "sourcePosition": {
-      "line": 28,
-      "column": 7,
-      "currentOffset": 836,
-      "endOffset": 1169
-    },
-    "children": [{
-      "sourcePosition": {
         "line": 28,
-        "column": 18,
-        "currentOffset": 847,
-        "endOffset": 867
+        "column": 27,
+        "currentOffset": 883,
+        "endOffset": 913
       },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "timestampValue": "2023-06-11T00:11:01.477Z"
+        },
+        "count": 1
+      }, {
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 28,
+              "column": 27,
+              "currentOffset": 883,
+              "endOffset": 889
+            },
+            "causeMessage": "Property createdAt is undefined on object."
+          }
+        },
+        "count": 1
+      }],
       "children": [{
         "sourcePosition": {
           "line": 28,
-          "column": 18,
-          "currentOffset": 847,
-          "endOffset": 862
+          "column": 27,
+          "currentOffset": 883,
+          "endOffset": 903
         },
+        "values": [{
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "birthday": {
+                  "stringValue": "January 1"
+                },
+                "createdAt": {
+                  "timestampValue": "2023-06-11T00:11:01.477Z"
+                }
+              }
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "birthday": {
+                  "stringValue": "January 1"
+                }
+              }
+            }
+          },
+          "count": 1
+        }],
         "children": [{
           "sourcePosition": {
             "line": 28,
-            "column": 18,
-            "currentOffset": 847,
-            "endOffset": 853
-          }
-        }]
-      }]
-    }, {
-      "sourcePosition": {
-        "line": 29,
-        "column": 7,
-        "currentOffset": 876,
-        "endOffset": 1169
-      },
-      "children": [{
-        "sourcePosition": {
-          "line": 29,
-          "column": 31,
-          "currentOffset": 900,
-          "endOffset": 972
-        },
-        "children": [{
-          "sourcePosition": {
-            "line": 29,
-            "column": 31,
-            "currentOffset": 900,
-            "endOffset": 908
+            "column": 27,
+            "currentOffset": 883,
+            "endOffset": 898
           },
-          "children": [{
-            "sourcePosition": {
-              "line": 29,
-              "column": 31,
-              "currentOffset": 900,
-              "endOffset": 903
-            }
-          }]
-        }, {
-          "sourcePosition": {
-            "line": 29,
-            "column": 50,
-            "currentOffset": 919,
-            "endOffset": 972
-          }
-        }]
-      }, {
-        "sourcePosition": {
-          "line": 31,
-          "column": 7,
-          "currentOffset": 1045,
-          "endOffset": 1169
-        },
-        "children": [{
-          "sourcePosition": {
-            "line": 31,
-            "column": 28,
-            "currentOffset": 1066,
-            "endOffset": 1118
-          },
-          "children": [{
-            "sourcePosition": {
-              "line": 31,
-              "column": 28,
-              "currentOffset": 1066,
-              "endOffset": 1087
+          "values": [{
+            "value": {
+              "undefined": {
+              }
             },
-            "children": [{
-              "sourcePosition": {
-                "line": 31,
-                "column": 28,
-                "currentOffset": 1066,
-                "endOffset": 1077
-              },
-              "children": [{
-                "sourcePosition": {
-                  "line": 31,
-                  "column": 28,
-                  "currentOffset": 1066,
-                  "endOffset": 1069
-                }
-              }]
-            }]
+            "count": 1
           }, {
-            "sourcePosition": {
-              "line": 31,
-              "column": 54,
-              "currentOffset": 1092,
-              "endOffset": 1118
-            },
-            "children": [{
-              "sourcePosition": {
-                "line": 31,
-                "column": 54,
-                "currentOffset": 1092,
-                "endOffset": 1108
-              },
-              "children": [{
-                "sourcePosition": {
-                  "line": 31,
-                  "column": 54,
-                  "currentOffset": 1092,
-                  "endOffset": 1103
-                },
-                "children": [{
-                  "sourcePosition": {
-                    "line": 31,
-                    "column": 54,
-                    "currentOffset": 1092,
-                    "endOffset": 1095
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "data": {
+                    "mapValue": {
+                      "fields": {
+                        "birthday": {
+                          "stringValue": "January 1"
+                        },
+                        "createdAt": {
+                          "timestampValue": "2023-06-11T00:11:01.477Z"
+                        }
+                      }
+                    }
+                  },
+                  "__name__": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "id": {
+                    "stringValue": "alice"
                   }
-                }]
-              }]
-            }]
-          }]
-        }, {
-          "sourcePosition": {
-            "line": 33,
-            "column": 14,
-            "currentOffset": 1135,
-            "endOffset": 1169
-          },
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "data": {
+                    "mapValue": {
+                      "fields": {
+                        "birthday": {
+                          "stringValue": "January 1"
+                        }
+                      }
+                    }
+                  },
+                  "__name__": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "id": {
+                    "stringValue": "alice"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }],
           "children": [{
             "sourcePosition": {
-              "line": 33,
-              "column": 14,
-              "currentOffset": 1135,
-              "endOffset": 1151
-            }
-          }, {
-            "sourcePosition": {
-              "line": 33,
-              "column": 35,
-              "currentOffset": 1156,
-              "endOffset": 1169
-            }
+              "line": 28,
+              "column": 27,
+              "currentOffset": 883,
+              "endOffset": 889
+            },
+            "values": [{
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-11T00:11:01.477Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "writeFields": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "undefined": {
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-11T00:11:01.477Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "writeFields": {
+                      "listValue": {
+                        "values": [{
+                          "stringValue": "createdAt"
+                        }]
+                      }
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "mapValue": {
+                        "fields": {
+                          "data": {
+                            "mapValue": {
+                              "fields": {
+                                "birthday": {
+                                  "stringValue": "January 1"
+                                },
+                                "createdAt": {
+                                  "timestampValue": "2023-06-11T00:11:01.477Z"
+                                }
+                              }
+                            }
+                          },
+                          "__name__": {
+                            "pathValue": {
+                              "segments": [{
+                                "simple": "databases"
+                              }, {
+                                "simple": "(default)"
+                              }, {
+                                "simple": "documents"
+                              }, {
+                                "simple": "users"
+                              }, {
+                                "simple": "alice"
+                              }]
+                            }
+                          },
+                          "id": {
+                            "stringValue": "alice"
+                          }
+                        }
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "time": {
+                      "timestampValue": "2023-06-11T00:11:01.526Z"
+                    },
+                    "auth": {
+                      "mapValue": {
+                        "fields": {
+                          "uid": {
+                            "stringValue": "alice"
+                          },
+                          "token": {
+                            "mapValue": {
+                              "fields": {
+                                "iss": {
+                                  "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                                },
+                                "aud": {
+                                  "stringValue": "brightpaw-d6fd6"
+                                },
+                                "iat": {
+                                  "intValue": "0"
+                                },
+                                "exp": {
+                                  "intValue": "3600"
+                                },
+                                "auth_time": {
+                                  "intValue": "0"
+                                },
+                                "sub": {
+                                  "stringValue": "alice"
+                                },
+                                "user_id": {
+                                  "stringValue": "alice"
+                                },
+                                "firebase": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "sign_in_provider": {
+                                        "stringValue": "custom"
+                                      },
+                                      "identities": {
+                                        "mapValue": {
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "headers": {
+                      "mapValue": {
+                      }
+                    },
+                    "inTransaction": {
+                      "boolValue": true
+                    },
+                    "path": {
+                      "pathValue": {
+                        "segments": [{
+                          "simple": "databases"
+                        }, {
+                          "simple": "(default)"
+                        }, {
+                          "simple": "documents"
+                        }, {
+                          "simple": "users"
+                        }, {
+                          "simple": "alice"
+                        }]
+                      }
+                    },
+                    "transforms": {
+                      "nullValue": null
+                    },
+                    "writeFields": {
+                      "nullValue": null
+                    },
+                    "readFields": {
+                      "nullValue": null
+                    },
+                    "resource": {
+                      "mapValue": {
+                        "fields": {
+                          "data": {
+                            "mapValue": {
+                              "fields": {
+                                "birthday": {
+                                  "stringValue": "January 1"
+                                }
+                              }
+                            }
+                          },
+                          "__name__": {
+                            "pathValue": {
+                              "segments": [{
+                                "simple": "databases"
+                              }, {
+                                "simple": "(default)"
+                              }, {
+                                "simple": "documents"
+                              }, {
+                                "simple": "users"
+                              }, {
+                                "simple": "alice"
+                              }]
+                            }
+                          },
+                          "id": {
+                            "stringValue": "alice"
+                          }
+                        }
+                      }
+                    },
+                    "method": {
+                      "stringValue": "create"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }]
           }]
         }]
       }]
     }]
   }, {
     "sourcePosition": {
-      "line": 5,
-      "column": 30,
-      "currentOffset": 146,
-      "endOffset": 169
+      "line": 32,
+      "column": 7,
+      "currentOffset": 960,
+      "endOffset": 1115
     },
     "values": [{
       "value": {
         "undefined": {
-          "sourcePosition": {
-            "line": 11,
-            "column": 14,
-            "currentOffset": 314,
-            "endOffset": 320
-          },
-          "causeMessage": "Null value error."
         }
       },
       "count": 2
     }, {
       "value": {
+        "boolValue": false
+      },
+      "count": 3
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 32,
+        "column": 18,
+        "currentOffset": 971,
+        "endOffset": 991
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "mapValue": {
+            "fields": {
+              "birthday": {
+                "stringValue": "January 1"
+              },
+              "createdAt": {
+                "timestampValue": "2023-06-11T00:11:01.477Z"
+              }
+            }
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "mapValue": {
+            "fields": {
+              "birthday": {
+                "stringValue": "January 1"
+              }
+            }
+          }
+        },
+        "count": 2
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 32,
+          "column": 18,
+          "currentOffset": 971,
+          "endOffset": 986
+        },
+        "values": [{
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 2
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "data": {
+                  "mapValue": {
+                    "fields": {
+                      "birthday": {
+                        "stringValue": "January 1"
+                      },
+                      "createdAt": {
+                        "timestampValue": "2023-06-11T00:11:01.477Z"
+                      }
+                    }
+                  }
+                },
+                "__name__": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "alice"
+                    }]
+                  }
+                },
+                "id": {
+                  "stringValue": "alice"
+                }
+              }
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "mapValue": {
+              "fields": {
+                "data": {
+                  "mapValue": {
+                    "fields": {
+                      "birthday": {
+                        "stringValue": "January 1"
+                      }
+                    }
+                  }
+                },
+                "__name__": {
+                  "pathValue": {
+                    "segments": [{
+                      "simple": "databases"
+                    }, {
+                      "simple": "(default)"
+                    }, {
+                      "simple": "documents"
+                    }, {
+                      "simple": "users"
+                    }, {
+                      "simple": "alice"
+                    }]
+                  }
+                },
+                "id": {
+                  "stringValue": "alice"
+                }
+              }
+            }
+          },
+          "count": 2
+        }],
+        "children": [{
+          "sourcePosition": {
+            "line": 32,
+            "column": 18,
+            "currentOffset": 971,
+            "endOffset": 977
+          },
+          "values": [{
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "undefined": {
+                    }
+                  },
+                  "method": {
+                    "stringValue": "update"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.477Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "writeFields": {
+                    "listValue": {
+                      "values": [{
+                        "stringValue": "createdAt"
+                      }]
+                    }
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              },
+                              "createdAt": {
+                                "timestampValue": "2023-06-11T00:11:01.477Z"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.526Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "nullValue": null
+                  },
+                  "writeFields": {
+                    "nullValue": null
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "create"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "mapValue": {
+                "fields": {
+                  "time": {
+                    "timestampValue": "2023-06-11T00:11:01.526Z"
+                  },
+                  "auth": {
+                    "mapValue": {
+                      "fields": {
+                        "uid": {
+                          "stringValue": "alice"
+                        },
+                        "token": {
+                          "mapValue": {
+                            "fields": {
+                              "iss": {
+                                "stringValue": "https://securetoken.google.com/brightpaw-d6fd6"
+                              },
+                              "aud": {
+                                "stringValue": "brightpaw-d6fd6"
+                              },
+                              "iat": {
+                                "intValue": "0"
+                              },
+                              "exp": {
+                                "intValue": "3600"
+                              },
+                              "auth_time": {
+                                "intValue": "0"
+                              },
+                              "sub": {
+                                "stringValue": "alice"
+                              },
+                              "user_id": {
+                                "stringValue": "alice"
+                              },
+                              "firebase": {
+                                "mapValue": {
+                                  "fields": {
+                                    "sign_in_provider": {
+                                      "stringValue": "custom"
+                                    },
+                                    "identities": {
+                                      "mapValue": {
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "headers": {
+                    "mapValue": {
+                    }
+                  },
+                  "inTransaction": {
+                    "boolValue": true
+                  },
+                  "path": {
+                    "pathValue": {
+                      "segments": [{
+                        "simple": "databases"
+                      }, {
+                        "simple": "(default)"
+                      }, {
+                        "simple": "documents"
+                      }, {
+                        "simple": "users"
+                      }, {
+                        "simple": "alice"
+                      }]
+                    }
+                  },
+                  "transforms": {
+                    "nullValue": null
+                  },
+                  "writeFields": {
+                    "nullValue": null
+                  },
+                  "readFields": {
+                    "nullValue": null
+                  },
+                  "resource": {
+                    "mapValue": {
+                      "fields": {
+                        "data": {
+                          "mapValue": {
+                            "fields": {
+                              "birthday": {
+                                "stringValue": "January 1"
+                              }
+                            }
+                          }
+                        },
+                        "__name__": {
+                          "pathValue": {
+                            "segments": [{
+                              "simple": "databases"
+                            }, {
+                              "simple": "(default)"
+                            }, {
+                              "simple": "documents"
+                            }, {
+                              "simple": "users"
+                            }, {
+                              "simple": "alice"
+                            }]
+                          }
+                        },
+                        "id": {
+                          "stringValue": "alice"
+                        }
+                      }
+                    }
+                  },
+                  "method": {
+                    "stringValue": "update"
+                  }
+                }
+              }
+            },
+            "count": 1
+          }]
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 33,
+        "column": 7,
+        "currentOffset": 1000,
+        "endOffset": 1115
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 2
+      }, {
+        "value": {
+          "boolValue": false
+        },
+        "count": 3
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 33,
+          "column": 31,
+          "currentOffset": 1024,
+          "endOffset": 1080
+        },
+        "values": [{
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 2
+        }, {
+          "value": {
+            "boolValue": false
+          },
+          "count": 3
+        }],
+        "children": [{
+          "sourcePosition": {
+            "line": 33,
+            "column": 31,
+            "currentOffset": 1024,
+            "endOffset": 1032
+          },
+          "values": [{
+            "value": {
+              "undefined": {
+              }
+            },
+            "count": 2
+          }, {
+            "value": {
+              "listValue": {
+                "values": [{
+                  "stringValue": "birthday"
+                }, {
+                  "stringValue": "createdAt"
+                }]
+              }
+            },
+            "count": 1
+          }, {
+            "value": {
+              "listValue": {
+                "values": [{
+                  "stringValue": "birthday"
+                }]
+              }
+            },
+            "count": 2
+          }],
+          "children": [{
+            "sourcePosition": {
+              "line": 33,
+              "column": 31,
+              "currentOffset": 1024,
+              "endOffset": 1027
+            },
+            "values": [{
+              "value": {
+                "undefined": {
+                }
+              },
+              "count": 2
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "birthday": {
+                      "stringValue": "January 1"
+                    },
+                    "createdAt": {
+                      "timestampValue": "2023-06-11T00:11:01.477Z"
+                    }
+                  }
+                }
+              },
+              "count": 1
+            }, {
+              "value": {
+                "mapValue": {
+                  "fields": {
+                    "birthday": {
+                      "stringValue": "January 1"
+                    }
+                  }
+                }
+              },
+              "count": 2
+            }]
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 33,
+            "column": 50,
+            "currentOffset": 1043,
+            "endOffset": 1080
+          },
+          "values": [{
+            "value": {
+              "listValue": {
+                "values": [{
+                  "stringValue": "displayName"
+                }, {
+                  "stringValue": "photoURL"
+                }, {
+                  "stringValue": "username"
+                }]
+              }
+            },
+            "count": 5
+          }]
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 35,
+          "column": 14,
+          "currentOffset": 1099,
+          "endOffset": 1115
+        },
+        "values": [{
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 2
+        }, {
+          "value": {
+            "boolValue": false
+          },
+          "count": 3
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 39,
+      "column": 7,
+      "currentOffset": 1160,
+      "endOffset": 1468
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 39,
+        "column": 18,
+        "currentOffset": 1171,
+        "endOffset": 1191
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 39,
+          "column": 18,
+          "currentOffset": 1171,
+          "endOffset": 1186
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 39,
+            "column": 18,
+            "currentOffset": 1171,
+            "endOffset": 1177
+          }
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 40,
+        "column": 7,
+        "currentOffset": 1200,
+        "endOffset": 1468
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 40,
+          "column": 21,
+          "currentOffset": 1214,
+          "endOffset": 1241
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 40,
+            "column": 21,
+            "currentOffset": 1214,
+            "endOffset": 1221
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 40,
+              "column": 21,
+              "currentOffset": 1214,
+              "endOffset": 1217
+            }
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 40,
+            "column": 33,
+            "currentOffset": 1226,
+            "endOffset": 1241
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 40,
+              "column": 33,
+              "currentOffset": 1226,
+              "endOffset": 1237
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 40,
+                "column": 33,
+                "currentOffset": 1226,
+                "endOffset": 1232
+              }
+            }]
+          }]
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 41,
+          "column": 7,
+          "currentOffset": 1250,
+          "endOffset": 1468
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 41,
+            "column": 19,
+            "currentOffset": 1262,
+            "endOffset": 1308
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 41,
+              "column": 19,
+              "currentOffset": 1262,
+              "endOffset": 1273
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 41,
+                "column": 19,
+                "currentOffset": 1262,
+                "endOffset": 1268
+              }
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 41,
+              "column": 35,
+              "currentOffset": 1278,
+              "endOffset": 1308
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 41,
+                "column": 35,
+                "currentOffset": 1278,
+                "endOffset": 1298
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 41,
+                  "column": 35,
+                  "currentOffset": 1278,
+                  "endOffset": 1293
+                },
+                "children": [{
+                  "sourcePosition": {
+                    "line": 41,
+                    "column": 35,
+                    "currentOffset": 1278,
+                    "endOffset": 1284
+                  }
+                }]
+              }]
+            }]
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 42,
+            "column": 7,
+            "currentOffset": 1317,
+            "endOffset": 1468
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 42,
+              "column": 31,
+              "currentOffset": 1341,
+              "endOffset": 1413
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 42,
+                "column": 31,
+                "currentOffset": 1341,
+                "endOffset": 1349
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 42,
+                  "column": 31,
+                  "currentOffset": 1341,
+                  "endOffset": 1344
+                }
+              }]
+            }, {
+              "sourcePosition": {
+                "line": 42,
+                "column": 50,
+                "currentOffset": 1360,
+                "endOffset": 1413
+              }
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 44,
+              "column": 14,
+              "currentOffset": 1432,
+              "endOffset": 1468
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 44,
+                "column": 14,
+                "currentOffset": 1432,
+                "endOffset": 1459
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 44,
+                  "column": 14,
+                  "currentOffset": 1432,
+                  "endOffset": 1438
+                }
+              }, {
+                "sourcePosition": {
+                  "line": 44,
+                  "column": 25,
+                  "currentOffset": 1443,
+                  "endOffset": 1459
+                }
+              }]
+            }, {
+              "sourcePosition": {
+                "line": 44,
+                "column": 46,
+                "currentOffset": 1464,
+                "endOffset": 1468
+              }
+            }]
+          }]
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 48,
+      "column": 7,
+      "currentOffset": 1520,
+      "endOffset": 1866
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 48,
+        "column": 18,
+        "currentOffset": 1531,
+        "endOffset": 1551
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 48,
+          "column": 18,
+          "currentOffset": 1531,
+          "endOffset": 1546
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 48,
+            "column": 18,
+            "currentOffset": 1531,
+            "endOffset": 1537
+          }
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 49,
+        "column": 7,
+        "currentOffset": 1560,
+        "endOffset": 1866
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 49,
+          "column": 31,
+          "currentOffset": 1584,
+          "endOffset": 1656
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 49,
+            "column": 31,
+            "currentOffset": 1584,
+            "endOffset": 1592
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 49,
+              "column": 31,
+              "currentOffset": 1584,
+              "endOffset": 1587
+            }
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 49,
+            "column": 50,
+            "currentOffset": 1603,
+            "endOffset": 1656
+          }
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 51,
+          "column": 7,
+          "currentOffset": 1742,
+          "endOffset": 1866
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 51,
+            "column": 28,
+            "currentOffset": 1763,
+            "endOffset": 1815
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 51,
+              "column": 28,
+              "currentOffset": 1763,
+              "endOffset": 1784
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 51,
+                "column": 28,
+                "currentOffset": 1763,
+                "endOffset": 1774
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 51,
+                  "column": 28,
+                  "currentOffset": 1763,
+                  "endOffset": 1766
+                }
+              }]
+            }]
+          }, {
+            "sourcePosition": {
+              "line": 51,
+              "column": 54,
+              "currentOffset": 1789,
+              "endOffset": 1815
+            },
+            "children": [{
+              "sourcePosition": {
+                "line": 51,
+                "column": 54,
+                "currentOffset": 1789,
+                "endOffset": 1805
+              },
+              "children": [{
+                "sourcePosition": {
+                  "line": 51,
+                  "column": 54,
+                  "currentOffset": 1789,
+                  "endOffset": 1800
+                },
+                "children": [{
+                  "sourcePosition": {
+                    "line": 51,
+                    "column": 54,
+                    "currentOffset": 1789,
+                    "endOffset": 1792
+                  }
+                }]
+              }]
+            }]
+          }]
+        }, {
+          "sourcePosition": {
+            "line": 53,
+            "column": 14,
+            "currentOffset": 1832,
+            "endOffset": 1866
+          },
+          "children": [{
+            "sourcePosition": {
+              "line": 53,
+              "column": 14,
+              "currentOffset": 1832,
+              "endOffset": 1848
+            }
+          }, {
+            "sourcePosition": {
+              "line": 53,
+              "column": 35,
+              "currentOffset": 1853,
+              "endOffset": 1866
+            }
+          }]
+        }]
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 8,
+      "column": 19,
+      "currentOffset": 201,
+      "endOffset": 216
+    },
+    "values": [{
+      "value": {
         "undefined": {
+          "sourcePosition": {
+            "line": 25,
+            "column": 11,
+            "currentOffset": 792,
+            "endOffset": 798
+          },
+          "causeMessage": "Null value error."
         }
       },
-      "count": 1
-    }, {
+      "count": 2
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 8,
+        "column": 29,
+        "currentOffset": 211,
+        "endOffset": 216
+      },
+      "values": [{
+        "value": {
+          "stringValue": "foobar"
+        },
+        "count": 2
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 9,
+      "column": 24,
+      "currentOffset": 243,
+      "endOffset": 278
+    },
+    "values": [{
       "value": {
-        "boolValue": true
+        "undefined": {
+        }
       },
       "count": 1
     }, {
@@ -2228,46 +3373,266 @@ const data = {
         "boolValue": false
       },
       "count": 1
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 9,
+        "column": 24,
+        "currentOffset": 243,
+        "endOffset": 258
+      },
+      "values": [{
+        "value": {
+          "boolValue": true
+        },
+        "count": 2
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 9,
+          "column": 34,
+          "currentOffset": 253,
+          "endOffset": 258
+        },
+        "values": [{
+          "value": {
+            "stringValue": "alice"
+          },
+          "count": 2
+        }]
+      }]
     }, {
+      "sourcePosition": {
+        "line": 9,
+        "column": 45,
+        "currentOffset": 264,
+        "endOffset": 278
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "boolValue": false
+        },
+        "count": 1
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 10,
+      "column": 21,
+      "currentOffset": 303,
+      "endOffset": 361
+    },
+    "values": [{
       "value": {
         "undefined": {
-          "sourcePosition": {
-            "line": 15,
-            "column": 14,
-            "currentOffset": 385,
-            "endOffset": 391
-          },
-          "causeMessage": "Property createdAt is undefined on object."
         }
+      },
+      "count": 1
+    }, {
+      "value": {
+        "boolValue": false
+      },
+      "count": 2
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 10,
+        "column": 21,
+        "currentOffset": 303,
+        "endOffset": 340
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "boolValue": true
+        },
+        "count": 1
+      }, {
+        "value": {
+          "undefined": {
+            "sourcePosition": {
+              "line": 28,
+              "column": 27,
+              "currentOffset": 883,
+              "endOffset": 889
+            },
+            "causeMessage": "Property createdAt is undefined on object."
+          }
+        },
+        "count": 1
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 10,
+          "column": 21,
+          "currentOffset": 303,
+          "endOffset": 318
+        },
+        "values": [{
+          "value": {
+            "boolValue": true
+          },
+          "count": 3
+        }],
+        "children": [{
+          "sourcePosition": {
+            "line": 10,
+            "column": 31,
+            "currentOffset": 313,
+            "endOffset": 318
+          },
+          "values": [{
+            "value": {
+              "stringValue": "alice"
+            },
+            "count": 3
+          }]
+        }]
+      }, {
+        "sourcePosition": {
+          "line": 10,
+          "column": 42,
+          "currentOffset": 324,
+          "endOffset": 340
+        },
+        "values": [{
+          "value": {
+            "undefined": {
+            }
+          },
+          "count": 1
+        }, {
+          "value": {
+            "boolValue": true
+          },
+          "count": 1
+        }, {
+          "value": {
+            "undefined": {
+              "sourcePosition": {
+                "line": 28,
+                "column": 27,
+                "currentOffset": 883,
+                "endOffset": 889
+              },
+              "causeMessage": "Property createdAt is undefined on object."
+            }
+          },
+          "count": 1
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 10,
+        "column": 65,
+        "currentOffset": 347,
+        "endOffset": 361
+      },
+      "values": [{
+        "value": {
+          "undefined": {
+          }
+        },
+        "count": 1
+      }, {
+        "value": {
+          "boolValue": false
+        },
+        "count": 2
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 14,
+      "column": 30,
+      "currentOffset": 447,
+      "endOffset": 462
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 14,
+        "column": 40,
+        "currentOffset": 457,
+        "endOffset": 462
+      }
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 15,
+      "column": 21,
+      "currentOffset": 486,
+      "endOffset": 523
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 15,
+        "column": 21,
+        "currentOffset": 486,
+        "endOffset": 501
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 15,
+          "column": 31,
+          "currentOffset": 496,
+          "endOffset": 501
+        }
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 15,
+        "column": 42,
+        "currentOffset": 507,
+        "endOffset": 523
+      }
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 19,
+      "column": 22,
+      "currentOffset": 603,
+      "endOffset": 618
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 19,
+        "column": 32,
+        "currentOffset": 613,
+        "endOffset": 618
+      }
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 20,
+      "column": 21,
+      "currentOffset": 642,
+      "endOffset": 673
+    },
+    "values": [{
+      "value": {
+        "boolValue": false
       },
       "count": 1
     }],
     "children": [{
       "sourcePosition": {
-        "line": 5,
-        "column": 30,
-        "currentOffset": 146,
-        "endOffset": 159
+        "line": 20,
+        "column": 21,
+        "currentOffset": 642,
+        "endOffset": 657
       },
       "values": [{
-        "value": {
-          "undefined": {
-            "sourcePosition": {
-              "line": 11,
-              "column": 14,
-              "currentOffset": 314,
-              "endOffset": 320
-            },
-            "causeMessage": "Null value error."
-          }
-        },
-        "count": 2
-      }, {
-        "value": {
-          "boolValue": true
-        },
-        "count": 3
-      }, {
         "value": {
           "boolValue": false
         },
@@ -2275,22 +3640,12 @@ const data = {
       }],
       "children": [{
         "sourcePosition": {
-          "line": 5,
-          "column": 38,
-          "currentOffset": 154,
-          "endOffset": 159
+          "line": 20,
+          "column": 31,
+          "currentOffset": 652,
+          "endOffset": 657
         },
         "values": [{
-          "value": {
-            "stringValue": "foobar"
-          },
-          "count": 2
-        }, {
-          "value": {
-            "stringValue": "alice"
-          },
-          "count": 3
-        }, {
           "value": {
             "stringValue": "bob"
           },
@@ -2299,52 +3654,130 @@ const data = {
       }]
     }, {
       "sourcePosition": {
-        "line": 5,
-        "column": 49,
-        "currentOffset": 165,
-        "endOffset": 169
+        "line": 20,
+        "column": 42,
+        "currentOffset": 663,
+        "endOffset": 673
       },
       "values": [{
         "value": {
-          "undefined": {
+        },
+        "count": 1
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 21,
+      "column": 24,
+      "currentOffset": 701,
+      "endOffset": 739
+    },
+    "values": [{
+      "value": {
+        "boolValue": false
+      },
+      "count": 1
+    }],
+    "children": [{
+      "sourcePosition": {
+        "line": 21,
+        "column": 24,
+        "currentOffset": 701,
+        "endOffset": 716
+      },
+      "values": [{
+        "value": {
+          "boolValue": false
+        },
+        "count": 1
+      }],
+      "children": [{
+        "sourcePosition": {
+          "line": 21,
+          "column": 34,
+          "currentOffset": 711,
+          "endOffset": 716
+        },
+        "values": [{
+          "value": {
+            "stringValue": "bob"
+          },
+          "count": 1
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 21,
+        "column": 45,
+        "currentOffset": 722,
+        "endOffset": 739
+      },
+      "values": [{
+        "value": {
+        },
+        "count": 1
+      }]
+    }]
+  }, {
+    "sourcePosition": {
+      "line": 5,
+      "column": 20,
+      "currentOffset": 109,
+      "endOffset": 153
+    },
+    "children": [{
+      "sourcePosition": {
+        "line": 5,
+        "column": 20,
+        "currentOffset": 109,
+        "endOffset": 124
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 5,
+          "column": 20,
+          "currentOffset": 109,
+          "endOffset": 120
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 5,
+            "column": 20,
+            "currentOffset": 109,
+            "endOffset": 115
+          }
+        }]
+      }]
+    }, {
+      "sourcePosition": {
+        "line": 5,
+        "column": 40,
+        "currentOffset": 129,
+        "endOffset": 153
+      },
+      "children": [{
+        "sourcePosition": {
+          "line": 5,
+          "column": 40,
+          "currentOffset": 129,
+          "endOffset": 149
+        },
+        "children": [{
+          "sourcePosition": {
+            "line": 5,
+            "column": 40,
+            "currentOffset": 129,
+            "endOffset": 144
+          },
+          "children": [{
             "sourcePosition": {
-              "line": 15,
-              "column": 14,
-              "currentOffset": 385,
-              "endOffset": 391
-            },
-            "causeMessage": "Property resource is undefined on object."
-          }
-        },
-        "count": 2
-      }, {
-        "value": {
-          "undefined": {
-          }
-        },
-        "count": 1
-      }, {
-        "value": {
-          "boolValue": true
-        },
-        "count": 1
-      }, {
-        "value": {
-        },
-        "count": 1
-      }, {
-        "value": {
-          "undefined": {
-            "sourcePosition": {
-              "line": 15,
-              "column": 14,
-              "currentOffset": 385,
-              "endOffset": 391
-            },
-            "causeMessage": "Property createdAt is undefined on object."
-          }
-        },
-        "count": 1
+              "line": 5,
+              "column": 40,
+              "currentOffset": 129,
+              "endOffset": 135
+            }
+          }]
+        }]
       }]
     }]
   }]

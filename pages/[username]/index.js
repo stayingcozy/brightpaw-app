@@ -45,10 +45,10 @@ export default function UserProfilePage(props) {
 
           <WebRTCpi setPlaying={setPlaying}/>
           {/* <RemoteWebRTCTFCoco /> */}
-          <VideoUploader setDownloadURL={setDownloadURL} />
-          <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} />
+          {/* <VideoUploader setDownloadURL={setDownloadURL} />
+          <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
           {/* <UploadRoboflow downloadURL={downloadURL} /> */}
-          <IntervalMetric playing={playing} dogInView={dogInView} />
+          {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
           <PostCreation date={todaysDate} />
           <PostManager date={todaysDate} />   
         </AuthCheck>
