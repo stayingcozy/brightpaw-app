@@ -26,6 +26,9 @@ import { Joystick } from 'react-joystick-component';
 // import UploadRoboflow from '@/components/UploadRoboflow';
 import IntervalMetric from '@/components/IntervalMetric';
 import URLCheck from '@/components/UrlCheck';
+// import { StripePub } from '@/components/StripePub';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 //
 
 export default function UserProfilePage(props) {
@@ -38,21 +41,28 @@ export default function UserProfilePage(props) {
   // get date
   const todaysDate = getMonthDayYear();
 
+  // get stripe public key
+  const stripePromise = loadStripe(
+    'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
+  );
+
   return (
     <main>
         <AuthCheck>
           <URLCheck>
-            {/* <ConnectBLE /> */}
-            {/* <Joystick /> */}
+            <Elements stripe={stripePromise}>
+              {/* <ConnectBLE /> */}
+              {/* <Joystick /> */}
 
-            <WebRTCpi setPlaying={setPlaying}/>
-            {/* <RemoteWebRTCTFCoco /> */}
-            {/* <VideoUploader setDownloadURL={setDownloadURL} />
-            <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
-            {/* <UploadRoboflow downloadURL={downloadURL} /> */}
-            {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
-            <PostCreation date={todaysDate} />
-            <PostManager date={todaysDate} />   
+              <WebRTCpi setPlaying={setPlaying}/>
+              {/* <RemoteWebRTCTFCoco /> */}
+              {/* <VideoUploader setDownloadURL={setDownloadURL} />
+              <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
+              {/* <UploadRoboflow downloadURL={downloadURL} /> */}
+              {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
+              <PostCreation date={todaysDate} />
+              <PostManager date={todaysDate} />  
+            </Elements>
           </URLCheck>
         </AuthCheck>
         <SignOutButton />
