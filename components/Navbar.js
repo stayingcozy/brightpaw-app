@@ -1,14 +1,11 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '@/lib/context';
 
 // top navbar
 export default function Navbar(context) {
     
     const {user,username} = useContext(UserContext)
-    const router = useRouter()
-
 
     return (
         <nav className="navbar">
@@ -17,7 +14,8 @@ export default function Navbar(context) {
                 {username && (
                  <>
                     <li>
-                        <Link href={`${username}/checkout`}>
+                        <Link 
+                        href={`/${username}/checkout`}>
                             <span aria-label="emoji" role="img">
                             🛒
                             </span>{' '}
@@ -25,7 +23,7 @@ export default function Navbar(context) {
                         </Link> 
                     </li>
                     <li>
-                        <Link href={`${username}/payments`}>
+                        <Link href={`/${username}/payments`}>
                             <span aria-label="emoji" role="img">
                             💸
                             </span>{' '}
@@ -33,7 +31,7 @@ export default function Navbar(context) {
                         </Link>
                     </li>
                     <li>
-                        <Link href={`${username}/customers`}>
+                        <Link href={`/${username}/customers`}>
                             <span aria-label="emoji" role="img">
                             🧑🏿‍🤝‍🧑🏻
                             </span>{' '}
@@ -41,7 +39,7 @@ export default function Navbar(context) {
                         </Link>
                     </li>
                     <li>
-                        <Link href={`${username}/subscriptions`}>
+                        <Link href={`/${username}/subscriptions`}>
                             <span aria-label="emoji" role="img">
                             🔄
                             </span>{' '}

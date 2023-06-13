@@ -8,6 +8,10 @@ export default function URLCheck( props ) {
   const { username } = useContext(UserContext);
   const { asPath } = useRouter();
 
-  return (username==asPath.slice(1)) ? props.children : props.fallback || <Link href="/enter">You must be signed in</Link>;
+  var usernameCheck =  username==asPath.slice(1);
+  var stripe_succ = "success" == asPath.slice(1);
+  var stripe_fail = "failed" == asPath.slice(1);
+
+  return (usernameCheck || stripe_fail || stripe_succ) ? props.children : props.fallback || <Link href="/enter">You must be signed in</Link>;
   // condition ? exprIfTrue : exprIfFalse
 }
