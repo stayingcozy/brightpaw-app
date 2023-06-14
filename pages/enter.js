@@ -9,6 +9,11 @@ import debounce from 'lodash.debounce';
 
 export default function Enter(props) {
   const {user, username} = useContext(UserContext);
+  const router = useRouter();
+
+  if (user && username) {
+    router.push(username);
+  }
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -65,7 +70,7 @@ function UsernameForm() {
       // Commit both docs together as a batch write.
       // const batch = firestore.batch(); // v8
       const batch = writeBatch(db);
-      batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName });
+      batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName, email: user.email });
       batch.set(usernameDoc, { uid: user.uid });
 
       await batch.commit();

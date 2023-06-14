@@ -46,9 +46,11 @@ export default function UserProfilePage(props) {
     'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
   );
 
+
   return (
     <main>
         <AuthCheck>
+          {auth.currentUser ?
           <URLCheck>
             <Elements stripe={stripePromise}>
               {/* <ConnectBLE /> */}
@@ -64,8 +66,12 @@ export default function UserProfilePage(props) {
               <PostManager date={todaysDate} />  
             </Elements>
           </URLCheck>
+
+          : 
+          console.log("no auth")
+          }
+          <SignOutButton />
         </AuthCheck>
-        <SignOutButton />
     </main>
   )
 }

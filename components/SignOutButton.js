@@ -6,7 +6,10 @@ import { useRouter } from 'next/router';
 export default function SignOutButton() {
     const router = useRouter();
 
-    function signoutEnter() {
+    const signoutEnter = async (event) => {
+
+        event.preventDefault();
+        
         // route back to sign in page
         router.push('/enter');
 
