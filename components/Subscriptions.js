@@ -54,8 +54,6 @@ function SubscribeToPlan(props) {
     // Cancel a subscription
     const cancel = async (id) => {
         setLoading(true);
-        console.log("sub id url");
-        console.log('subscriptions/' + id);
         await fetchFromAPI('subscriptions/' + id, { method: 'PATCH' });
         // await fetchFromAPI('subscriptions/cancel', { method: 'PATCH' });
         alert('canceled!');
