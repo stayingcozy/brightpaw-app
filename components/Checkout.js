@@ -42,17 +42,18 @@ export function Checkout() {
 
     return (
         <>
-            <h2>Stripe Checkout</h2>
+            <h2>Neural Fetch Shop</h2>
             <p>
-                Shopping-cart scenario. Change the quantity
-                of the products below, then click checkout to open the Stripe Checkout
-                window.
+                Check out our products below!
             </p>
             <div>
                 <h3>{product.price_data.product_data.name}</h3>
-                <h4>Stripe Amount: {product.price_data.unit_amount}</h4>
 
                 <img src={product.price_data.product_data.images[0]} width="250px" alt="product" />
+                
+                <h3>${(product.price_data.unit_amount / 100).toFixed(2)}</h3>
+
+                <h3> Quantity </h3>
 
                 < button
                     onClick={() => changeQuantity(-1)}>
@@ -84,8 +85,8 @@ export function Checkout() {
 //     return <h3>Checkout failed!</h3>
 // }
 
-export function CheckoutSuccess() {
-    const url = window.location.href;
-    const sessionId = new URL(url).searchParams.get('session_id');
-    return <h3> Checkout was a Success! {sessionId} </h3>
-}
+// export function CheckoutSuccess() {
+//     const url = window.location.href;
+//     const sessionId = new URL(url).searchParams.get('session_id');
+//     return <h3> Checkout was a Success! {sessionId} </h3>
+// }

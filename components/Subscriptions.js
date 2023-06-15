@@ -121,77 +121,78 @@ function SubscribeToPlan(props) {
 
     return (
         <>
-            <h2>Subscriptions</h2>
-            <p>
-                Subscribe a user to a recurring plan, process the payment, and sync with
-                Firestore in realtime.
-            </p>
+        <h2>Subscriptions</h2>
+        <p>
+            Subscribe to Neural Fetch Health Analytics for your dog!
+        </p>
+        {/* 
+        <div>
+            <h2>Firestore Data</h2>
+            <p>User's data in Firestore.</p>
+            {user?.uid && <UserData user={user} />}
+        </div> */}
 
-            <div className="well">
-                <h2>Firestore Data</h2>
-                <p>User's data in Firestore.</p>
-                {user?.uid && <UserData user={user} />}
-            </div>
 
-            
-            <hr />
+        <hr />
 
-            <div className="well">
-            <h3>Step 1: Choose a Plan</h3>
+        <div>
+        <h3>Step 1: Choose a Plan</h3>
 
-            <button
-                className={
-                'btn ' +
-                (plan === 'price_1NIz4YIdyxz3uazIGLWWcplp'
-                    ? 'btn-primary'
-                    : 'btn-outline-primary')
-                }
-                onClick={() => setPlan('price_1NIz4YIdyxz3uazIGLWWcplp')}>
-                Choose Monthly $25/m
-          </button>
-
-          <button
+        <button
             className={
             'btn ' +
-            (plan === 'price_1NIz4YIdyxz3uazILRiK0yyG'
+            (plan === 'price_1NJPhUIdyxz3uazIrsRunOOf'
             ? 'btn-primary'
             : 'btn-outline-primary')
             }
-            onClick={() => setPlan('price_1NIz4YIdyxz3uazILRiK0yyG')}>
-            Choose Quarterly $50/q
-          </button>
+            onClick={() => setPlan('price_1NJPhUIdyxz3uazIrsRunOOf')}>
+            Puppy Pro $10/m
+        </button>
 
-            <p>
-                Select Plan: <strong>{plan}</strong>
+        <button
+            className={
+            'btn ' +
+            (plan === 'price_1NIz4YIdyxz3uazIGLWWcplp'
+                ? 'btn-primary'
+                : 'btn-outline-primary')
+            }
+            onClick={() => setPlan('price_1NIz4YIdyxz3uazIGLWWcplp')}>
+            Top Dog $25/m
+        </button>
+
+        </div>
+
+        {plan ? <p> Select Plan: <strong>Plan Selected!</strong> </p>
+        : <p> Select Plan: </p>}
+
+        {/* <hr /> */}
+
+        <form onSubmit={handleSubmit} hidden={!plan}>
+            <h3>Step 2: Submit a Payment Method</h3>
+            <p>Collect credit card details</p>
+            {/* <p>
+                Normal Card: <code>4242424242424242</code>
             </p>
+            <p>
+                3D Secure Card: <code>4000002500003155</code>
+            </p> */}
 
-            </div>
-            <hr />
 
-            <form onSubmit={handleSubmit} hidden={!plan}>
-                <h3>Step 2: Submit a Payment Method</h3>
-                <p>Collect credit card details</p>
-                <p>
-                    Normal Card: <code>4242424242424242</code>
-                </p>
-                <p>
-                    3D Secure Card: <code>4000002500003155</code>
-                </p>
+            <CardElement />
+            <button type="submit" disabled={loading}>
+                Subscribe & Pay
+            </button>
+        </form>
 
-                <hr />
 
-                <CardElement />
-                <button type="submit" disabled={loading}>
-                    Subscribe & Pay
-                </button>
-            </form>
+        <hr />
 
-            <div className="well">
+        <div className="well">
             <h3>Manage Current Subscriptions</h3>
             <div>
                 {subscriptions.map((sub) => (
                 <div key={sub.id}>
-                    {sub.id}. Next payment of {sub.plan.amount} due{' '}
+                    Next payment of ${(sub.plan.amount/100).toFixed(2)} due{' '}
                     {new Date(sub.current_period_end * 1000).toUTCString()}
                     <button
                     className="btn btn-sm btn-danger"
@@ -202,7 +203,7 @@ function SubscribeToPlan(props) {
                 </div>
                 ))}
             </div>
-            </div>
+        </div>
 
 
         </>

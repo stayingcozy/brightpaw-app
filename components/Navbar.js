@@ -19,25 +19,25 @@ export default function Navbar(context) {
                             <span aria-label="emoji" role="img">
                             🛒
                             </span>{' '}
-                            Checkout
+                            Shop
                         </Link> 
                     </li>
-                    <li>
+                    {/* <li>
                         <Link href={`/${username}/payments`}>
                             <span aria-label="emoji" role="img">
                             💸
                             </span>{' '}
                             Payments
                         </Link>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                         <Link href={`/${username}/customers`}>
                             <span aria-label="emoji" role="img">
                             🧑🏿‍🤝‍🧑🏻
                             </span>{' '}
                             Customers
                         </Link>
-                    </li>
+                    </li> */}
                     <li>
                         <Link href={`/${username}/subscriptions`}>
                             <span aria-label="emoji" role="img">

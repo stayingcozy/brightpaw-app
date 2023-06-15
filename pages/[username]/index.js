@@ -50,7 +50,6 @@ export default function UserProfilePage(props) {
   return (
     <main>
         <AuthCheck>
-          {auth.currentUser ?
           <URLCheck>
             <Elements stripe={stripePromise}>
               {/* <ConnectBLE /> */}
@@ -67,9 +66,6 @@ export default function UserProfilePage(props) {
             </Elements>
           </URLCheck>
 
-          : 
-          console.log("no auth")
-          }
           <SignOutButton />
         </AuthCheck>
     </main>

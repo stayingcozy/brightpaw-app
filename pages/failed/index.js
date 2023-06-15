@@ -1,3 +1,7 @@
 export default function CheckoutFail() {
-    return <h3>Checkout failed!</h3>
+    return (
+        <div>
+            <h3>Checkout failed!</h3>
+        </div>
+    )
 }

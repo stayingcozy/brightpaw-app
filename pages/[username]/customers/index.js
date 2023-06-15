@@ -1,24 +1,24 @@
-import Customers from "@/components/Customers"
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import SignOutButton from '@/components/SignOutButton';
-import AuthCheck from '@/components/AuthCheck';
+// import Customers from "@/components/Customers"
+// import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import SignOutButton from '@/components/SignOutButton';
+// import AuthCheck from '@/components/AuthCheck';
 
-export default function UserCustomers() {
+// export default function UserCustomers() {
 
-    // get stripe public key
-    const stripePromise = loadStripe(
-        'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
-    );
+//     // get stripe public key
+//     const stripePromise = loadStripe(
+//         'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
+//     );
 
-    return (
-      <>
-        <Elements stripe={stripePromise}>
-            <AuthCheck>
-                <Customers />
-            </AuthCheck>
-        </Elements>
-        <SignOutButton/>
-      </>
-    )
-  }
+//     return (
+//       <>
+//         <Elements stripe={stripePromise}>
+//             <AuthCheck>
+//                 <Customers />
+//             </AuthCheck>
+//         </Elements>
+//         <SignOutButton/>
+//       </>
+//     )
+//   }

@@ -12,7 +12,6 @@ export default function UserCheckout() {
     return (
       <>
         <Elements stripe={stripePromise}>
-        Checkout
             <Checkout/>
         </Elements>
 
