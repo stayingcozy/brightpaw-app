@@ -14,7 +14,7 @@ function SaveCard(props) {
     const stripe = useStripe();
     const elements = useElements();
     // const user = useUser();
-    const user = auth.currentUser.uid;
+    const user = auth.currentUser;
 
     const [setupIntent, setSetupIntent] = useState();
     const [wallet, setWallet] = useState([]);

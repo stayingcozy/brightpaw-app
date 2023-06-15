@@ -42,6 +42,12 @@ export function Checkout() {
 
     return (
         <>
+            <h2>Stripe Checkout</h2>
+            <p>
+                Shopping-cart scenario. Change the quantity
+                of the products below, then click checkout to open the Stripe Checkout
+                window.
+            </p>
             <div>
                 <h3>{product.price_data.product_data.name}</h3>
                 <h4>Stripe Amount: {product.price_data.unit_amount}</h4>
@@ -52,8 +58,8 @@ export function Checkout() {
                     onClick={() => changeQuantity(-1)}>
                         -
                 </button>
-                <span>
-                    {product.quantity}
+                <span style={{ margin: '20px', fontSize: '2em' }}>
+                {product.quantity}
                 </span>
                 <button
                 onClick={() => changeQuantity(1)}>
