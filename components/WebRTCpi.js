@@ -37,6 +37,7 @@ export default function WebRTCpi({setPlaying}) {
         pc.ontrack = (event) => {
             event.streams[0].getTracks().forEach((track) => {
             remoteStream.addTrack(track);
+            console.log(remoteStream);
             });
         };
 
@@ -51,17 +52,24 @@ export default function WebRTCpi({setPlaying}) {
         // const callDoc = doc(collection(db,'calls'));
         const callDoc = doc(collection(db,'users',`${uid}`,'calls'));
         const offerCandidates = doc(collection(callDoc,'offerCandidates')); 
+        const uidDoc = doc(db,'users',`${uid}`) // for latestCall
 
-        // callInputRef.current.value = callDoc.id;
+        const callUID = {
+            latestCall: callDoc.id
+        }
+        await updateDoc(uidDoc, callUID) // add latest call for go server to answer
 
         // Get candidates for caller, save to db
         pc.onicecandidate = (event) => {
+            // console.log("OnIceCandidate Triggered")
+            // event.candidate && console.log(event.candidate.toJSON())
             event.candidate && setDoc(offerCandidates, event.candidate.toJSON() );
         };
 
         // Create offer
         const offerDescription = await pc.createOffer();
         await pc.setLocalDescription(offerDescription);
+        // console.log("Offer has been created and set local description")
 
         const offer = {
             sdp: offerDescription.sdp,
@@ -70,12 +78,15 @@ export default function WebRTCpi({setPlaying}) {
 
         await setDoc(callDoc,{ offer })
 
+        // console.log("Offer has been logged to fb")
+
         // Listen for remote answer
         onSnapshot(callDoc, (snapshot) => {
             const data = snapshot.data();
             if (!pc.currentRemoteDescription && data?.answer) {
                 const answerDescription = new RTCSessionDescription(data.answer);
                 pc.setRemoteDescription(answerDescription);
+                // console.log("Answer has been received and set to remote description")
             }
         });
 
@@ -86,6 +97,7 @@ export default function WebRTCpi({setPlaying}) {
             if (change.type === 'added') {
                 const candidate = new RTCIceCandidate(change.doc.data());
                 pc.addIceCandidate(candidate);
+                // console.log("Answer Candidate has been noticed and added as Ice Candidate")
 
                 // set playing to true for analytics 
                 setPlaying(true);

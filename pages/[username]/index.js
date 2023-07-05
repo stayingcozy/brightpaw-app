@@ -29,6 +29,7 @@ import URLCheck from '@/components/UrlCheck';
 // import { StripePub } from '@/components/StripePub';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { ActivityChart } from '@/components/ActivityChart';
 //
 
 export default function UserProfilePage(props) {
@@ -56,6 +57,9 @@ export default function UserProfilePage(props) {
               {/* <Joystick /> */}
 
               <WebRTCpi setPlaying={setPlaying}/>
+
+              <ActivityChart />
+
               {/* <RemoteWebRTCTFCoco /> */}
               {/* <VideoUploader setDownloadURL={setDownloadURL} />
               <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
