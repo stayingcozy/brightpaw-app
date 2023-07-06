@@ -61,8 +61,8 @@ export default function UserProfilePage(props) {
               <ActivityChart />
 
               {/* <RemoteWebRTCTFCoco /> */}
-              {/* <VideoUploader setDownloadURL={setDownloadURL} />
-              <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
+              <VideoUploader setDownloadURL={setDownloadURL} />
+              <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} />
               {/* <UploadRoboflow downloadURL={downloadURL} /> */}
               {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
               <PostCreation date={todaysDate} />

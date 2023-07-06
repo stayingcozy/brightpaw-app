@@ -8,7 +8,7 @@ export function ActivityChart() {
 
   const svgWidth = 800;
   const svgHeight = 600;
-  const margin = { top: 20, right: 20, bottom: 100, left: 100 };
+  const margin = { top: 20, right: 20, bottom: 40, left: 40 };
   const chartWidth = svgWidth - margin.left - margin.right;
   const chartHeight = svgHeight - margin.top - margin.bottom;
 
