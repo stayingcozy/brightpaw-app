@@ -30,6 +30,10 @@ import URLCheck from '@/components/UrlCheck';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { ActivityChart } from '@/components/ActivityChart';
+import WebRTCwithCOCO from '@/components/WebRTCwithCOCO';
+import { RollingAverage } from '@/lib/analytics';
+import { AreaActivityChart } from '@/components/AreaActivityChart';
+import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
 //
 
 export default function UserProfilePage(props) {
@@ -47,6 +51,17 @@ export default function UserProfilePage(props) {
     'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
   );
 
+  var past_pred = [];
+  const uploadInterval = 180;
+  var dogroll = new RollingAverage(uploadInterval);
+  var catroll = new RollingAverage(uploadInterval);
+  var personroll = new RollingAverage(uploadInterval);
+  var dogCount = 0;
+  var catCount = 0;
+  var personCount = 0;
+  var predictionsMade = 0;
+  const [net, setNet] = useState(0);
+
 
   return (
     <main>
@@ -56,13 +71,23 @@ export default function UserProfilePage(props) {
               {/* <ConnectBLE /> */}
               {/* <Joystick /> */}
 
-              <WebRTCpi setPlaying={setPlaying}/>
-
-              <ActivityChart />
+              {/* <WebRTCpi setPlaying={setPlaying}/> */}
+              <WebRTCwithCOCO 
+                playing={playing} setPlaying={setPlaying}  
+                past_pred={past_pred} uploadInterval={uploadInterval}
+                dogroll={dogroll} catroll={catroll} personroll={personroll}
+                predictionsMade={predictionsMade}
+                net={net} setNet={setNet}
+                dogCount={dogCount} catCount={catCount} personCount={personCount}
+              />
+              {/* <ActivityChart /> */}
+              {/* <AreaActivityChart /> */}
+              <AreaAllActivityChart />
 
               {/* <RemoteWebRTCTFCoco /> */}
-              <VideoUploader setDownloadURL={setDownloadURL} />
-              <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} />
+              {/* <VideoUploader setDownloadURL={setDownloadURL} />
+              <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
+
               {/* <UploadRoboflow downloadURL={downloadURL} /> */}
               {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
               <PostCreation date={todaysDate} />

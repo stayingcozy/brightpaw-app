@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, orderBy, limit, doc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 
-export function ActivityChart() {
+export function AreaActivityChart() {
   const [data, setData] = useState([]);
 
   const svgWidth = 800;
@@ -20,6 +20,12 @@ export function ActivityChart() {
 
     const xScale = d3.scaleBand().range([0, chartWidth]).paddingInner(0.2).paddingOuter(0.2);
     const yScale = d3.scaleLinear().range([chartHeight, 0]);
+
+    const area = d3
+      .area()
+      .x((d) => xScale(d.timestamp))
+      .y0(chartHeight)
+      .y1((d) => yScale(d.person));
 
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat((d) => `${d}`);
@@ -50,27 +56,22 @@ export function ActivityChart() {
     xScale.domain(data.map((item) => item.timestamp));
     yScale.domain([0, d3.max(data, (d) => d.person)]);
 
-    const rects = chart.selectAll('rect').data(data);
+    const areaPath = chart.selectAll('.area').data([data]);
 
-    rects.exit().remove();
+    areaPath.exit().remove();
 
-    rects
-      .attr('width', xScale.bandwidth)
-      .attr('height', (d) => chartHeight - yScale(d.person))
-      .attr('x', (d) => xScale(d.timestamp))
-      .attr('y', (d) => yScale(d.person))
-      .style('fill', 'purple');
+    areaPath
+      .attr('d', area)
+      .attr('fill', 'purple')
+      .attr('opacity', 0.5);
 
-    rects
+    areaPath
       .enter()
-      .append('rect')
-      .attr('x', (d) => xScale(d.timestamp))
-      .attr('y', (d) => yScale(d.person))
-      .attr('width', xScale.bandwidth)
-      .transition()
-      .duration(1000)
-      .attr('height', (d) => chartHeight - yScale(d.person))
-      .style('fill', 'purple');
+      .append('path')
+      .attr('class', 'area')
+      .attr('d', area)
+      .attr('fill', 'purple')
+      .attr('opacity', 0.5);
 
     xAxisGroup.call(xAxis);
     yAxisGroup.call(yAxis);

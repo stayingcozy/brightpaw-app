@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, orderBy, limit, doc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 
-export function ActivityChart() {
+export function AreaAllActivityChart() {
   const [data, setData] = useState([]);
 
   const svgWidth = 800;
@@ -21,56 +21,100 @@ export function ActivityChart() {
     const xScale = d3.scaleBand().range([0, chartWidth]).paddingInner(0.2).paddingOuter(0.2);
     const yScale = d3.scaleLinear().range([chartHeight, 0]);
 
+    const areaPerson = d3
+      .area()
+      .x((d) => xScale(d.timestamp))
+      .y0(chartHeight)
+      .y1((d) => yScale(d.person));
+
+    const areaDog = d3
+      .area()
+      .x((d) => xScale(d.timestamp))
+      .y0(chartHeight)
+      .y1((d) => yScale(d.dog));
+
+    const areaCat = d3
+      .area()
+      .x((d) => xScale(d.timestamp))
+      .y0(chartHeight)
+      .y1((d) => yScale(d.cat));
+
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat((d) => `${d}`);
 
     var dateHoursAndMinutes = data.map((item) => {
-        console.log("item:",item)
-        const date = item.timestamp.toDate();
-        return {
-          hours: date.getHours(),
-          minutes: date.getMinutes(),
-          seconds: date.getSeconds()
-        };
+      const date = item.timestamp.toDate();
+      return {
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+      };
     });
     var combinedTime = dateHoursAndMinutes.map((item) => {
-        return {
-            time: item.hours + ':' + item.minutes + ':' + item.seconds
-        }
+      return {
+        time: item.hours + ':' + item.minutes + ':' + item.seconds,
+      };
     });
 
     // Set the x labels to human readable times from firebase
     xAxis.tickFormat((value, index) => {
-        // Get the corresponding combinedTime value for the tick index
-        const time = combinedTime[index].time;
-        return time;
+      // Get the corresponding combinedTime value for the tick index
+      const time = combinedTime[index].time;
+      return time;
     });
-  
 
     xScale.domain(data.map((item) => item.timestamp));
-    yScale.domain([0, d3.max(data, (d) => d.person)]);
+    yScale.domain([
+      0,
+      d3.max(data, (d) => Math.max(d.person, d.dog, d.cat)), // Adjust domain to include all three data values
+    ]);
 
-    const rects = chart.selectAll('rect').data(data);
+    const areaPersonPath = chart.selectAll('.area-person').data([data]);
+    const areaDogPath = chart.selectAll('.area-dog').data([data]);
+    const areaCatPath = chart.selectAll('.area-cat').data([data]);
 
-    rects.exit().remove();
+    areaPersonPath.exit().remove();
+    areaDogPath.exit().remove();
+    areaCatPath.exit().remove();
 
-    rects
-      .attr('width', xScale.bandwidth)
-      .attr('height', (d) => chartHeight - yScale(d.person))
-      .attr('x', (d) => xScale(d.timestamp))
-      .attr('y', (d) => yScale(d.person))
-      .style('fill', 'purple');
+    areaPersonPath
+      .attr('d', areaPerson)
+      .attr('fill', 'purple')
+      .attr('opacity', 0.5);
 
-    rects
+    areaDogPath
+      .attr('d', areaDog)
+      .attr('fill', 'green')
+      .attr('opacity', 0.5);
+
+    areaCatPath
+      .attr('d', areaCat)
+      .attr('fill', 'blue')
+      .attr('opacity', 0.5);
+
+    areaPersonPath
       .enter()
-      .append('rect')
-      .attr('x', (d) => xScale(d.timestamp))
-      .attr('y', (d) => yScale(d.person))
-      .attr('width', xScale.bandwidth)
-      .transition()
-      .duration(1000)
-      .attr('height', (d) => chartHeight - yScale(d.person))
-      .style('fill', 'purple');
+      .append('path')
+      .attr('class', 'area-person')
+      .attr('d', areaPerson)
+      .attr('fill', 'purple')
+      .attr('opacity', 0.5);
+
+    areaDogPath
+      .enter()
+      .append('path')
+      .attr('class', 'area-dog')
+      .attr('d', areaDog)
+      .attr('fill', 'green')
+      .attr('opacity', 0.5);
+
+    areaCatPath
+      .enter()
+      .append('path')
+      .attr('class', 'area-cat')
+      .attr('d', areaCat)
+      .attr('fill', 'blue')
+      .attr('opacity', 0.5);
 
     xAxisGroup.call(xAxis);
     yAxisGroup.call(yAxis);
