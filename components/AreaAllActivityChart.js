@@ -21,6 +21,66 @@ export function AreaAllActivityChart() {
     const xScale = d3.scaleBand().range([0, chartWidth]).paddingInner(0.2).paddingOuter(0.2);
     const yScale = d3.scaleLinear().range([chartHeight, 0]);
 
+    const legendLabels = ['Person', 'Dog', 'Cat'];
+    const xAxisLabel = 'Time';
+    const yAxisLabel = 'Activity';
+
+
+    svg
+      .append('text')
+      .attr('class', 'chart-title')
+      .attr('x', svgWidth / 2)
+      .attr('y', margin.top + 6)
+      .attr('text-anchor', 'middle')
+      .attr('font-size','28px')
+      .text('Daily Activity');
+
+    const legend = svg
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', `translate(${svgWidth - (4*margin.right)}, ${margin.top})`);
+
+    const legendItems = legend.selectAll('.legend-item')
+      .data(legendLabels)
+      .enter()
+      .append('g')
+      .attr('class', 'legend-item')
+      .attr('transform', (d, i) => `translate(0, ${i * 20})`);
+
+    legendItems
+      .append('rect')
+      .attr('width', 10)
+      .attr('height', 10)
+      .attr('fill', (d, i) => ['purple', 'green', 'blue'][i])
+      .attr('opacity', 0.5);
+
+    legendItems
+      .append('text')
+      .attr('x', 15)
+      .attr('y', 8)
+      .attr('font-size', '16px')
+      .text(d => d);
+
+    // X-axis label
+    svg
+    .append('text')
+    .attr('class', 'x-axis-label')
+    .attr('x', svgWidth / 2)
+    .attr('y', svgHeight - 2)
+    .attr('text-anchor', 'middle')
+    .attr('font-size','12px')
+    .text(xAxisLabel);
+
+    // Y-axis label
+    svg
+    .append('text')
+    .attr('class', 'y-axis-label')
+    .attr('x', -svgHeight / 2)
+    .attr('y', margin.left / 2)
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'rotate(-90)')
+    .text(yAxisLabel);
+
     const areaPerson = d3
       .area()
       .x((d) => xScale(d.timestamp))
@@ -149,7 +209,7 @@ export function AreaAllActivityChart() {
       .append('svg')
       .attr('width', svgWidth)
       .attr('height', svgHeight)
-      .style('border', '2px solid gray');
+      .style('border', '1px solid gray');
 
     const chart = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
     chart.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${chartHeight})`);

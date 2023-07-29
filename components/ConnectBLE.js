@@ -116,7 +116,7 @@ export default function ConnectBLE() {
         }
         return esp32Service.getCharacteristic(writeCharacteristic)
         .then(characteristic => {
-            const writeValue = Uint8Array.of(150);
+            const writeValue = Uint8Array.of(1);
             return characteristic.writeValueWithoutResponse(writeValue);
         })
         .then(_ => {
@@ -132,7 +132,7 @@ export default function ConnectBLE() {
         }
         return esp32Service.getCharacteristic(writeCharacteristic)
         .then(characteristic => {
-            const writeValue = Uint8Array.of(125);
+            const writeValue = Uint8Array.of(0);
             return characteristic.writeValueWithoutResponse(writeValue);
         })
         .then(_ => {
@@ -148,7 +148,7 @@ export default function ConnectBLE() {
         }
         return esp32Service.getCharacteristic(writeCharacteristic)
         .then(characteristic => {
-            const writeValue = Uint8Array.of(100);
+            const writeValue = Uint8Array.of(2);
             return characteristic.writeValueWithoutResponse(writeValue);
         })
         .then(_ => {
@@ -211,11 +211,11 @@ export default function ConnectBLE() {
         <>
             <h3>Robot BLE</h3>
             <button onClick={BTConnect}> Connect 🔹</button>
-            <button onClick={BTUpUp}> ⏫</button>
+            {/* <button onClick={BTUpUp}> ⏫</button> */}
             <button onClick={BTUp}> ⬆️</button>
             <button onClick={BTStop}> 🛑</button>
             <button onClick={BTDown}> ⬇️</button>
-            <button onClick={BTDownDown}> ⏬</button>
+            {/* <button onClick={BTDownDown}> ⏬</button> */}
             <button onClick={BTLeft}> ⬅️</button>
             <button onClick={BTRight}> ➡️</button>
 

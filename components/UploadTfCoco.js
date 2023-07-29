@@ -12,7 +12,7 @@ export default function UploadTfCoco({downloadURL,playing,setPlaying,setDogInVie
   const [net, setNet] = useState();
 
   const DETECT_INTERVAL = 5; // milli-seconds 
-  const VIDEO_WIDTH = 600;
+  const VIDEO_WIDTH = 800; //600
 
   var pred_len;
   var num_total_pred=0;
@@ -104,13 +104,14 @@ export default function UploadTfCoco({downloadURL,playing,setPlaying,setDogInVie
   return (
       <>
       <div>
+        <button onClick={playing ? pause : play}>
+          {playing ? 'Pause' : 'Play'}
+        </button>
         <canvas
           ref={canvasRef}
           width={VIDEO_WIDTH} />
 
-        <button onClick={playing ? pause : play}>
-          {playing ? 'Pause' : 'Play'}
-        </button>
+
       </div>
 
       <div

@@ -34,6 +34,7 @@ import WebRTCwithCOCO from '@/components/WebRTCwithCOCO';
 import { RollingAverage } from '@/lib/analytics';
 import { AreaActivityChart } from '@/components/AreaActivityChart';
 import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
+import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
 //
 
 export default function UserProfilePage(props) {
@@ -71,6 +72,8 @@ export default function UserProfilePage(props) {
               {/* <ConnectBLE /> */}
               {/* <Joystick /> */}
 
+              <ConnectBLE_Camera />
+              
               {/* <WebRTCpi setPlaying={setPlaying}/> */}
               <WebRTCwithCOCO 
                 playing={playing} setPlaying={setPlaying}  
@@ -80,13 +83,14 @@ export default function UserProfilePage(props) {
                 net={net} setNet={setNet}
                 dogCount={dogCount} catCount={catCount} personCount={personCount}
               />
-              {/* <ActivityChart /> */}
-              {/* <AreaActivityChart /> */}
-              <AreaAllActivityChart />
 
               {/* <RemoteWebRTCTFCoco /> */}
               {/* <VideoUploader setDownloadURL={setDownloadURL} />
               <UploadTfCoco downloadURL={downloadURL} playing={playing} setPlaying={setPlaying} setDogInView={setDogInView} /> */}
+
+              {/* <ActivityChart /> */}
+              {/* <AreaActivityChart /> */}
+              <AreaAllActivityChart />
 
               {/* <UploadRoboflow downloadURL={downloadURL} /> */}
               {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}

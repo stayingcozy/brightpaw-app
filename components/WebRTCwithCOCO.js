@@ -114,8 +114,11 @@ export default function WebRTCwithCOCO({
             const data = snapshot.data();
             if (!getOrCreatePeerConnection().currentRemoteDescription && data?.answer) {
                 const answerDescription = new RTCSessionDescription(data.answer);
+                console.log("answer is ..");
+                console.log(answerDescription);
                 getOrCreatePeerConnection().setRemoteDescription(answerDescription);
-                // console.log("Answer has been received and set to remote description")
+                console.log("Answer has been received and set to remote description")
+                // answerReceived = true;
             }
         });
 
@@ -123,9 +126,17 @@ export default function WebRTCwithCOCO({
         const answerQueries = query(collection(callDoc,'answerCandidates'));
         onSnapshot(answerQueries, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
-            if (change.type === 'added') {
+            if (change.type === 'added') { // && answerReceived
                 const candidate = new RTCIceCandidate(change.doc.data());
+                console.log("added document triggered on snapshot... candidate...")
+                console.log(candidate);
+                console.log("pcref.current ...");
+                console.log(pcRef.current);
+
+                console.log("about to run add ICE")
                 getOrCreatePeerConnection().addIceCandidate(candidate);
+                // pcRef.current.addIceCandidate(candidate);
+                console.log("ran add ICE")
                 // console.log("Answer Candidate has been noticed and added as Ice Candidate")
             }
             });
