@@ -165,12 +165,12 @@ export default function WebRTCwithCOCO({
     //     })
     // },[])
 
-    useEffect(() => {
-        // This code will run after every render
-        console.log('net value has been updated:', net);
-        // runDetect()
-        // setPlaying(true);
-    }, [net]); // Only re-run the effect if net changes
+    // useEffect(() => {
+    //     // This code will run after every render
+    //     console.log('net value has been updated:', net);
+    //     // runDetect()
+    //     // setPlaying(true);
+    // }, [net]); // Only re-run the effect if net changes
 
     // Apply ML model when video is playing
     async function runDetect() {

@@ -47,6 +47,14 @@ export default function Navbar(context) {
                         </Link>
                     </li>
                     <li>
+                        <Link href={`/${username}/settings`}>
+                            <span aria-label="emoji" role="img">
+                            ⚙️
+                            </span>{' '}
+                            Settings
+                        </Link>
+                    </li>
+                    <li>
                         <Link href={`/${username}`}>
                             <img src={user?.photoURL} />
                         </Link>

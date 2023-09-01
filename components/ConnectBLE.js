@@ -1,13 +1,40 @@
+import { useState, useEffect } from "react";
+import { db, auth } from '@/lib/firebase';
+import { getDoc, doc } from "firebase/firestore";
 
 // Web Bluetooth API
 // https://developer.chrome.com/articles/bluetooth/
 
 export default function ConnectBLE() {
 
+    // get user firebase id
+    const uid = auth.currentUser.uid;
+    // Get UUID's from firestore
+    const petCamUUIDref = doc(db,'users',`${uid}`,'ble_uuid','autoBall');
+    // console.log(petCamUUIDref);
+    
+    const [myESP32, setMyESP32] = useState();
+    const [writeCharacteristic, setWriteCharacteristic] = useState();
+
+    async function getFBdata(Ref) {
+        const autoBallSnap = await getDoc(Ref);
+        if (autoBallSnap.exists()) {
+            // console.log("Document data:", petCamSnap.data());
+
+            setMyESP32(autoBallSnap.data().serviceUUID);
+            setWriteCharacteristic(autoBallSnap.data().writeUUID);
+
+            } else {
+            console.log("No such document!");
+        }
+    }
+
+    getFBdata(petCamUUIDref);
+
     // Both values below will need to be in firebase user profile based on esp32 they have
-    var myESP32 = 'd804b643-6ce7-4e81-9f8a-ce0f699085eb'
-    var helloCharacteristic = 'c8659212-af91-4ad3-a995-a58d6fd26145'
-    var writeCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a8'
+    // var myESP32 = 'd804b643-6ce7-4e81-9f8a-ce0f699085eb'
+    // // var helloCharacteristic = 'c8659212-af91-4ad3-a995-a58d6fd26145'
+    // var writeCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a8'
 
     let esp32Device = null;
     let esp32Service = null;
@@ -17,60 +44,60 @@ export default function ConnectBLE() {
     // Test functions
     /////////////////////////////////////////////////
 
-    async function BTConnect_Read() {
-        // only works on connect (callback)
-        // check out notifyCallback for Web BLE API, so it can print out every notify from server
-        navigator.bluetooth.requestDevice({
-            filters: [{
-                services: [myESP32]
-            }]
-        })
-        .then(device => {
-            return device.gatt.connect()
-        })
-        .then(server => server.getPrimaryService(myESP32))
-        .then(service => {
-            // Get print value characteristic
-            return service.getCharacteristic(helloCharacteristic);
-        })
-        .then(characteristic => {
-            // Set up event listener for when characteristic value changes
-            characteristic.addEventListener('characteristicvaluechanged',
-                                                handleChange);
-            // Read print value
-            return characteristic.readValue();
-        })
-        .catch(error => { console.log(error); });
-    }
+    // async function BTConnect_Read() {
+    //     // only works on connect (callback)
+    //     // check out notifyCallback for Web BLE API, so it can print out every notify from server
+    //     navigator.bluetooth.requestDevice({
+    //         filters: [{
+    //             services: [myESP32]
+    //         }]
+    //     })
+    //     .then(device => {
+    //         return device.gatt.connect()
+    //     })
+    //     .then(server => server.getPrimaryService(myESP32))
+    //     .then(service => {
+    //         // Get print value characteristic
+    //         return service.getCharacteristic(helloCharacteristic);
+    //     })
+    //     .then(characteristic => {
+    //         // Set up event listener for when characteristic value changes
+    //         characteristic.addEventListener('characteristicvaluechanged',
+    //                                             handleChange);
+    //         // Read print value
+    //         return characteristic.readValue();
+    //     })
+    //     .catch(error => { console.log(error); });
+    // }
 
-    async function handleChange(event) {
-        const printValue = event.target.value.getUint8(0);
-        console.log('Increment value is ' + printValue);
-    }
+    // async function handleChange(event) {
+    //     const printValue = event.target.value.getUint8(0);
+    //     console.log('Increment value is ' + printValue);
+    // }
     
-    async function BTConnect_Write() {
-        navigator.bluetooth.requestDevice({
-            filters: [{
-                services: [myESP32]
-            }]
-        })
-        .then(device => {
-            return device.gatt.connect()
-        })
-        .then(server => server.getPrimaryService(myESP32))
-        .then(service => {
-            // Get print value characteristic
-            return service.getCharacteristic(writeCharacteristic);
-        })
-        .then(characteristic => {
-            const writeValue = Uint8Array.of(2);
-            return characteristic.writeValueWithoutResponse(writeValue);
-        })
-        .then(_ => {
-            console.log('Value has been written.');
-        })
-        .catch(error => { console.log(error); });
-    }
+    // async function BTConnect_Write() {
+    //     navigator.bluetooth.requestDevice({
+    //         filters: [{
+    //             services: [myESP32]
+    //         }]
+    //     })
+    //     .then(device => {
+    //         return device.gatt.connect()
+    //     })
+    //     .then(server => server.getPrimaryService(myESP32))
+    //     .then(service => {
+    //         // Get print value characteristic
+    //         return service.getCharacteristic(writeCharacteristic);
+    //     })
+    //     .then(characteristic => {
+    //         const writeValue = Uint8Array.of(2);
+    //         return characteristic.writeValueWithoutResponse(writeValue);
+    //     })
+    //     .then(_ => {
+    //         console.log('Value has been written.');
+    //     })
+    //     .catch(error => { console.log(error); });
+    // }
     /////////////////////////////////////////////////
 
     async function BTConnect(){

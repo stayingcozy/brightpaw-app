@@ -2,23 +2,80 @@
 // Web Bluetooth API
 // https://developer.chrome.com/articles/bluetooth/
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { db, auth } from '@/lib/firebase';
+import { getDoc, doc } from "firebase/firestore";
 
 export default function ConnectBLE_Camera() {
 
-    // TODO - Both values below will need to be in firebase user profile based on cameraTower they have
-    var myCameraTower = 'fb0af608-c3ad-41bb-9aba-6d8185f45de7'
-    // var helloCharacteristic = 'c8659212-af91-4ad3-a995-a58d6fd26145'
-    var writeCharacteristic = '0cb87266-9c1e-4e8b-a317-b742364e03b4'
+    // get user firebase id
+    const uid = auth.currentUser.uid;
+    // Get UUID's from firestore
+    const petCamUUIDref = doc(db,'users',`${uid}`,'ble_uuid','petcamera');
+    // console.log(petCamUUIDref);
+    
+    const [myCameraTower, setMyCameraTower] = useState();
+    const [writeCharacteristic, setWriteCharacteristic] = useState();
+    const [notifyCharacteristic, setNotifyCharacteristic] = useState();
 
-    let cameraTowerDevice = null;
-    let cameraTowerService = null;
+    async function getFBdata(Ref) {
+        const petCamSnap = await getDoc(Ref);
+        if (petCamSnap.exists()) {
+            // console.log("Document data:", petCamSnap.data());
+
+            setMyCameraTower(petCamSnap.data().serviceUUID);
+            setWriteCharacteristic(petCamSnap.data().writeUUID);
+            setNotifyCharacteristic(petCamSnap.data().notifyUUID);
+
+          } else {
+            console.log("No such document!");
+        }
+    }
+
+    getFBdata(petCamUUIDref);
+
+    const [cameraTowerDevice, setCameraTowerDevice] = useState(null);
+    const [cameraTowerService, setCameraTowerService] = useState(null);
 
     const [formValue, setFormValue] = useState('');
+    const [passValue, setPassValue] = useState('');
 
+    const [connected, setConnected] = useState();
+
+    const [notifyValue, setNotifyValue] = useState("");
+
+    const handleNotification = (event) => {
+        const value = event.target.value;
+        const decoder = new TextDecoder();
+        const message = decoder.decode(value);
+        setNotifyValue(message);
+    };
     const handleChange = (e) => {
         setFormValue(e.target.value);
     };
+    const handlePassChange = (e) => {
+        setPassValue(e.target.value);
+    };
+
+    // Subscribe to notifications when the cameraTowerService is set
+    useEffect(() => {
+        if (cameraTowerService) {
+        cameraTowerService
+            .getCharacteristic(notifyCharacteristic)
+            .then((characteristic) => {
+            return characteristic.startNotifications();
+            })
+            .then((characteristic) => {
+            characteristic.addEventListener(
+                "characteristicvaluechanged",
+                handleNotification
+            );
+            })
+            .catch((error) => {
+            console.log(error);
+            });
+        }
+    }, [cameraTowerService]);
 
     async function BTConnect(){
         navigator.bluetooth.requestDevice({
@@ -27,12 +84,15 @@ export default function ConnectBLE_Camera() {
             }]
         })
         .then(device => {
-            cameraTowerDevice = device;
+            setCameraTowerDevice(device);
             return device.gatt.connect()
         })
         .then(server => server.getPrimaryService(myCameraTower))
         .then(service => {
-            cameraTowerService = service;
+            setCameraTowerService(service);
+            if (service) {
+                setConnected(true);
+            }
         })
         .then(service => {
           return service;
@@ -41,13 +101,13 @@ export default function ConnectBLE_Camera() {
     }
 
     async function sendMessage() {
-        const message = formValue;
-        // const message = messageInput.value;
+        const message = formValue+":"+passValue;
         const encoder = new TextEncoder('utf-8');
         const data = encoder.encode(message);
 
         if(!cameraTowerService)
         {
+            console.log("No camera tower service")
             return;
         }
         return cameraTowerService.getCharacteristic(writeCharacteristic)
@@ -62,11 +122,16 @@ export default function ConnectBLE_Camera() {
 
     return (
         <>
-            <h3>Camera Tower BLE</h3>
+            <h3>Setup Pet Camera with Bluetooth</h3>
+            <h2>1. Connect With Below</h2>
             <button onClick={BTConnect}> Connect 🔹</button>
-            <input name='messageInput' placeholder="Enter Message" value={formValue} onChange={handleChange}/>
-            <button onClick={sendMessage}> 📧➡️</button>
-
+            {connected ? <p> ✅ <strong>Connected!</strong> </p>
+            : <p> ❌ Not Connected </p>}
+            <h2>2. Send WIFI Username (SSID) and Password for your Pet Camera</h2>
+            <input name='messageInput' placeholder="Enter Username" value={formValue} onChange={handleChange}/>
+            <input name='messagePassInput' placeholder="Enter Password" value={passValue} onChange={handlePassChange}/>
+            <button onClick={sendMessage}> Send 📧➡️</button>
+            {notifyValue && <strong>✅ Device Connected to Wifi</strong>}
         </>
     );
 }

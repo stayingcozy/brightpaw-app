@@ -34,7 +34,7 @@ import WebRTCwithCOCO from '@/components/WebRTCwithCOCO';
 import { RollingAverage } from '@/lib/analytics';
 import { AreaActivityChart } from '@/components/AreaActivityChart';
 import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
-import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
+// import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
 //
 
 export default function UserProfilePage(props) {
@@ -72,7 +72,7 @@ export default function UserProfilePage(props) {
               {/* <ConnectBLE /> */}
               {/* <Joystick /> */}
 
-              <ConnectBLE_Camera />
+              {/* <ConnectBLE_Camera /> */}
               
               {/* <WebRTCpi setPlaying={setPlaying}/> */}
               <WebRTCwithCOCO 

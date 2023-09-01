@@ -30,6 +30,12 @@ service cloud.firestore {
       allow read, create, update: if true;
     }
 
+    match /users/{userId}/ble_uuid/{docs = ** } {
+      // allow read, create, update: if belongsTo(userId);
+			//allow create: if belongsTo(userId) && hasValidTimestamp();
+      allow read, create, update: if true;
+    }
+
     match /users/{userId}/posts/{docs = ** } {
       allow read: if belongsTo(userId);
 			allow create: if belongsTo(userId) && isValidPost();
