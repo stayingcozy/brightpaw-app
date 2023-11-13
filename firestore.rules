@@ -9,12 +9,14 @@ service cloud.firestore {
     }
 
     match /users/{docs = ** } {
-      allow create: if isValidedUserCreation()
+      // allow create: if isValidedUserCreation()
+       allow read, create, update: if true;
     }
 
 		match /users/{userId} {
-			allow read: if belongsTo(userId);
-      allow update: if belongsTo(userId) && isValidUserData();
+			// allow read: if belongsTo(userId);
+      // allow update: if belongsTo(userId) && isValidUserData();
+      allow read, create, update: if true;
 			// allow create: if belongsTo(userId) && hasValidTimestamp() && isValidUserData();
 		}
 

@@ -35,6 +35,7 @@ import { RollingAverage } from '@/lib/analytics';
 import { AreaActivityChart } from '@/components/AreaActivityChart';
 import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
 // import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
+import WebRTC from '@/components/WebRTCv2';
 //
 
 export default function UserProfilePage(props) {
@@ -69,20 +70,23 @@ export default function UserProfilePage(props) {
         <AuthCheck>
           <URLCheck>
             <Elements stripe={stripePromise}>
+
               {/* <ConnectBLE /> */}
               {/* <Joystick /> */}
 
               {/* <ConnectBLE_Camera /> */}
               
               {/* <WebRTCpi setPlaying={setPlaying}/> */}
-              <WebRTCwithCOCO 
+              {/* <WebRTCwithCOCO 
                 playing={playing} setPlaying={setPlaying}  
                 past_pred={past_pred} uploadInterval={uploadInterval}
                 dogroll={dogroll} catroll={catroll} personroll={personroll}
                 predictionsMade={predictionsMade}
                 net={net} setNet={setNet}
                 dogCount={dogCount} catCount={catCount} personCount={personCount}
-              />
+              /> */}
+              {/* <iframe src="http://192.168.86.31:8889/cam" scrolling="no"></iframe> */}
+              <WebRTC />
 
               {/* <RemoteWebRTCTFCoco /> */}
               {/* <VideoUploader setDownloadURL={setDownloadURL} />
