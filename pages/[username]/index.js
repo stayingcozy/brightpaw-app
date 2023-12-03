@@ -9,7 +9,7 @@ import getMonthDayYear from '@/lib/getMonthDayYear';
 import SignOutButton from '@/components/SignOutButton';
 // import WebCamTfCoco from '@/components/WebCamTfCoco';
 
-import { doc, updateDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useForm } from 'react-hook-form'; // keep track of form inputs, and if form is valid,invalid
 import ReactMarkdown from 'react-markdown'; // markdown notation for post
@@ -36,6 +36,7 @@ import { AreaActivityChart } from '@/components/AreaActivityChart';
 import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
 // import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
 import WebRTC from '@/components/WebRTCv2';
+import ServerDataFetch from '@/components/ServerDataFetch';
 //
 
 export default function UserProfilePage(props) {
@@ -53,16 +54,26 @@ export default function UserProfilePage(props) {
     'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
   );
 
-  var past_pred = [];
-  const uploadInterval = 180;
-  var dogroll = new RollingAverage(uploadInterval);
-  var catroll = new RollingAverage(uploadInterval);
-  var personroll = new RollingAverage(uploadInterval);
-  var dogCount = 0;
-  var catCount = 0;
-  var personCount = 0;
-  var predictionsMade = 0;
-  const [net, setNet] = useState(0);
+  // var past_pred = [];
+  // const uploadInterval = 180;
+  // var dogroll = new RollingAverage(uploadInterval);
+  // var catroll = new RollingAverage(uploadInterval);
+  // var personroll = new RollingAverage(uploadInterval);
+  // var dogCount = 0;
+  // var catCount = 0;
+  // var personCount = 0;
+  // var predictionsMade = 0;
+  // const [net, setNet] = useState(0);
+
+  // Stream View Values
+  // var viewUser = "usertest";
+  // var viewPass = "passtest";
+  var serverIP = "192.168.86.34";
+  const WebRTCPort = "8889";
+  // var srcURL = `http://${viewUser}:${viewPass}@${serverIP}:${WebRTCPort}/mystream`
+  var srcURL = `http://${serverIP}:${WebRTCPort}/mystream/`
+
+  // const [srcURL, setSrcURL] = useState('');
 
 
   return (
@@ -85,8 +96,14 @@ export default function UserProfilePage(props) {
                 net={net} setNet={setNet}
                 dogCount={dogCount} catCount={catCount} personCount={personCount}
               /> */}
-              {/* <iframe src="http://192.168.86.31:8889/cam" scrolling="no"></iframe> */}
-              <WebRTC />
+              {/* <iframe src="http://localhost:8889/mystream/" scrolling="no"></iframe> */}
+              {/* <iframe src="http://localhost:8889/mystream/" width="100%" height="100%" scrolling="no"></iframe> */}
+              {/* <ServerDataFetch setSrcURL={setSrcURL} /> */}
+              <div class="videoWrapper">
+                <iframe width="1280" height="720" src={srcURL} frameborder="0" allowfullscreen></iframe>
+              </div>
+
+              {/* <WebRTC /> */}
 
               {/* <RemoteWebRTCTFCoco /> */}
               {/* <VideoUploader setDownloadURL={setDownloadURL} />

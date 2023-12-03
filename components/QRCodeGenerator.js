@@ -31,7 +31,7 @@ function QRCodeGenerator() {
   });
 
   const generateQRCode = () => {
-    const message = formValue+" ; "+passValue;
+    const message = formValue+" ; "+passValue+" ; "+uid;
     if (message) {
       QRCode.toDataURL(message, { errorCorrectionLevel, width: qrCodeSize }, (err, dataUrl) => {
         if (err) {
