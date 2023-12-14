@@ -68,9 +68,10 @@ export default function UserProfilePage(props) {
   // Stream View Values
   // var viewUser = "usertest";
   // var viewPass = "passtest";
-  var serverIP = "192.168.86.34";
+  // var serverIP = "192.168.86.34";
+  var serverIP = "172.20.29.210";
   const WebRTCPort = "8889";
-  // var srcURL = `http://${viewUser}:${viewPass}@${serverIP}:${WebRTCPort}/mystream`
+  //var srcURL = `http://${viewUser}:${viewPass}@${serverIP}:${WebRTCPort}/mystream`
   var srcURL = `http://${serverIP}:${WebRTCPort}/mystream/`
 
   // const [srcURL, setSrcURL] = useState('');
@@ -99,8 +100,8 @@ export default function UserProfilePage(props) {
               {/* <iframe src="http://localhost:8889/mystream/" scrolling="no"></iframe> */}
               {/* <iframe src="http://localhost:8889/mystream/" width="100%" height="100%" scrolling="no"></iframe> */}
               {/* <ServerDataFetch setSrcURL={setSrcURL} /> */}
-              <div class="videoWrapper">
-                <iframe width="1280" height="720" src={srcURL} frameborder="0" allowfullscreen></iframe>
+              <div className="videoWrapper">
+                <iframe width="1280" height="720" src={srcURL} allowFullScreen></iframe>
               </div>
 
               {/* <WebRTC /> */}
