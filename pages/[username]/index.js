@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import styles from '@/styles/Admin.module.css';
 import VideoUploader from "@/components/VideoUploader";
@@ -54,27 +54,15 @@ export default function UserProfilePage(props) {
     'pk_test_51NBRQVIdyxz3uazIYnk5wpqkkj2S8PGvR3kFNnGO5fSqgBd1W6irb4pcdcTVzoCfkC8pexeOeVC9AbEun9Kcaxql00cX3NgyTD'
   );
 
-  // var past_pred = [];
-  // const uploadInterval = 180;
-  // var dogroll = new RollingAverage(uploadInterval);
-  // var catroll = new RollingAverage(uploadInterval);
-  // var personroll = new RollingAverage(uploadInterval);
-  // var dogCount = 0;
-  // var catCount = 0;
-  // var personCount = 0;
-  // var predictionsMade = 0;
-  // const [net, setNet] = useState(0);
-
   // Stream View Values
   // var viewUser = "usertest";
   // var viewPass = "passtest";
-  // var serverIP = "192.168.86.34";
-  var serverIP = "172.20.29.210";
-  const WebRTCPort = "8889";
+  // var serverIP = "192.168.86.26";
+  // const WebRTCPort = "8889";
   //var srcURL = `http://${viewUser}:${viewPass}@${serverIP}:${WebRTCPort}/mystream`
-  var srcURL = `http://${serverIP}:${WebRTCPort}/mystream/`
+  // var srcURL = `http://${serverIP}:${WebRTCPort}/mystream/`
 
-  // const [srcURL, setSrcURL] = useState('');
+  const [srcURL, setSrcURL] = useState('');
 
 
   return (
@@ -99,7 +87,7 @@ export default function UserProfilePage(props) {
               /> */}
               {/* <iframe src="http://localhost:8889/mystream/" scrolling="no"></iframe> */}
               {/* <iframe src="http://localhost:8889/mystream/" width="100%" height="100%" scrolling="no"></iframe> */}
-              {/* <ServerDataFetch setSrcURL={setSrcURL} /> */}
+              <ServerDataFetch setSrcURL={setSrcURL} />
               <div className="videoWrapper">
                 <iframe width="1280" height="720" src={srcURL} allowFullScreen></iframe>
               </div>

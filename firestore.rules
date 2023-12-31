@@ -8,10 +8,14 @@ service cloud.firestore {
 
     //allow read: if request.auth.uid == request.resource.auth.uid;
 
-    match /serverIP/{docs ** } {
+    match /serverIP/{docs = ** } {
       allow read, create, update: if true
     }
 
+    match /mediaServers/{docs = ** } {
+      allow read, create, update: if true
+    }
+    
     match /usernames/{docs = ** } {
       allow read, create: if true
     }
