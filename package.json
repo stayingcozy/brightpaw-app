@@ -28,7 +28,8 @@
     "react-joystick-component": "^6.2.0",
     "react-markdown": "^8.0.5",
     "react-player": "^2.11.2",
-    "react-webcam": "^7.0.1"
+    "react-webcam": "^7.0.1",
+    "recharts": "^2.10.3"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.7",

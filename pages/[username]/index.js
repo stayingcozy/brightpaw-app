@@ -37,6 +37,8 @@ import { AreaAllActivityChart } from '@/components/AreaAllActivityChart';
 // import ConnectBLE_Camera from '@/components/ConnectBLE_Camera'
 import WebRTC from '@/components/WebRTCv2';
 import ServerDataFetch from '@/components/ServerDataFetch';
+import ActivityRechart from '@/components/ActivityRechart';
+import { DailyActivityChart } from '@/components/DailyActivityChart';
 //
 
 export default function UserProfilePage(props) {
@@ -100,7 +102,9 @@ export default function UserProfilePage(props) {
 
               {/* <ActivityChart /> */}
               {/* <AreaActivityChart /> */}
-              <AreaAllActivityChart />
+              {/* <AreaAllActivityChart /> */}
+              <DailyActivityChart />
+              {/* <ActivityRechart /> */}
 
               {/* <UploadRoboflow downloadURL={downloadURL} /> */}
               {/* <IntervalMetric playing={playing} dogInView={dogInView} /> */}
