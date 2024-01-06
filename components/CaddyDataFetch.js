@@ -39,7 +39,7 @@ export default function CaddyDataFetch({ setHttpsSrcURL }) {
 
             // Set the value using the provided setter function
             //setHttpsSrcURL(`http://${serverIP}`); // works for landing page for caddy with original caddyfile config
-            setHttpsSrcURL(`https://${serverIP}.nip.io/${subDir}`); 
+            setHttpsSrcURL(`https://${serverIP}.nip.io/${uid}`); 
         });
 
         }

@@ -21,7 +21,7 @@ export default function ServerDataFetch({ setSrcURL }) {
         const serverIP = serverData["ip"];
 
         // Set the value using the provided setter function
-        setSrcURL(`http://${serverIP}:${WebRTCPort}/mystream/`);
+        setSrcURL(`http://${serverIP}:${WebRTCPort}/${uid}/`);
       });
 
 
