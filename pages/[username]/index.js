@@ -39,6 +39,7 @@ import WebRTC from '@/components/WebRTCv2';
 import ServerDataFetch from '@/components/ServerDataFetch';
 import ActivityRechart from '@/components/ActivityRechart';
 import { DailyActivityChart } from '@/components/DailyActivityChart';
+import CaddyDataFetch from '@/components/CaddyDataFetch';
 //
 
 export default function UserProfilePage(props) {
@@ -65,12 +66,13 @@ export default function UserProfilePage(props) {
   // var srcURL = `http://${serverIP}:${WebRTCPort}/mystream/`
 
   const [srcURL, setSrcURL] = useState('');
+  const [httpsSrcURL, setHttpsSrcURL] = useState('');
 
 
   return (
     <main>
         <AuthCheck>
-          <URLCheck>
+          {/* <URLCheck> */}
             <Elements stripe={stripePromise}>
 
               {/* <ConnectBLE /> */}
@@ -93,6 +95,10 @@ export default function UserProfilePage(props) {
               <div className="videoWrapper">
                 <iframe width="1280" height="720" src={srcURL} allowFullScreen></iframe>
               </div>
+              <CaddyDataFetch setHttpsSrcURL={setHttpsSrcURL} />
+              <div className="videoWrapper">
+                <iframe width="1280" height="720" src={httpsSrcURL} allowFullScreen></iframe>
+              </div>
 
               {/* <WebRTC /> */}
 
@@ -111,7 +117,7 @@ export default function UserProfilePage(props) {
               <PostCreation date={todaysDate} />
               <PostManager date={todaysDate} />  
             </Elements>
-          </URLCheck>
+          {/* </URLCheck> */}
 
           <SignOutButton />
         </AuthCheck>
