@@ -5,7 +5,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function ServerDataFetch({ setSrcURL }) {
 
-  const WebRTCPort = 8889;
+  // const WebRTCPort = 8889; 
 
   useEffect(() => {
     async function fetchServerData() {
@@ -19,6 +19,7 @@ export default function ServerDataFetch({ setSrcURL }) {
         // console.log(doc.id, " => ", doc.data());
         const serverData = doc.data();
         const serverIP = serverData["ip"];
+        const WebRTCPort = serverData["webrtcPort"]
 
         // Set the value using the provided setter function
         setSrcURL(`http://${serverIP}:${WebRTCPort}/${uid}/`);
