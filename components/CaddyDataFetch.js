@@ -33,9 +33,9 @@ export default function CaddyDataFetch({ setHttpsSrcURL }) {
         querySnapshot.forEach((doc) => {
             const serverData = doc.data();
             // httpsPort
-            const httpsPort = serverData["httpsPort"];
+            // const httpsPort = serverData["httpsPort"];
             // subdir
-            const subDir = serverData["subDir"];
+            // const subDir = serverData["subDir"];
 
             // Set the value using the provided setter function
             //setHttpsSrcURL(`http://${serverIP}`); // works for landing page for caddy with original caddyfile config
