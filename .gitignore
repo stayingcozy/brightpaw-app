@@ -38,3 +38,5 @@ yarn-error.log*
 node_modules
 **/node_modules
 /functions/node_modules
+
+*.cache
